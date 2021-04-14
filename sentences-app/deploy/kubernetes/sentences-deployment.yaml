@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: sentences
+    component: main
+  name: sentences
+spec:
+  selector:
+    matchLabels:
+      app: sentences
+      component: main
+  template:
+    metadata:
+      labels:
+        app: sentences
+        component: main
+      annotations:
+        prometheus.io/scrape: 'true'
+        prometheus.io/port: '8080'
+        prometheus.io/path: '/metrics'
+    spec:
+      #priorityClassName: medium-priority
+      containers:
+      - image: releasepraqma/sentence:latest
+        imagePullPolicy: Always
+        name: sentences
+        args: [
+          '--age-service', 'http://age:8080',
+          '--name-service', 'http://name:8080'
+	]
+        resources:
+          requests:
+            cpu: 0.25
+          limits:
+            cpu: 0.25

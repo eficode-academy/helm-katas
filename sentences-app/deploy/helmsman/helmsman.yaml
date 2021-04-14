@@ -1,0 +1,47 @@
+# For use with Helmsman
+
+metadata:
+  org: "Praqma.com"
+  maintainer: "Name Somename (example@praqma.net)"
+  description: "Example Desired State File for Sentences demo app."
+
+helmRepos:
+  stable: "https://kubernetes-charts.storage.googleapis.com"
+
+namespaces:
+  default:
+
+apps:
+  age:
+    description: "The backend service for sentences to supply an age"
+    chart: ../../../../k8s-sentences-age/helm/age
+    namespace: default
+    enabled: true
+    priority: -1
+    version: 0.1.0
+    set:
+      image.repository: "releasepraqma/age"
+      image.tag:        "latest"
+
+  name:
+    description: "The backend service for sentences to supply a name"
+    chart: ../../../../k8s-sentences-name/helm/name
+    namespace: default
+    enabled: true
+    priority: -1
+    version: 0.1.0
+    set:
+      image.repository: "releasepraqma/name"
+      image.tag:        "latest"
+
+  sentence:
+    description: "The main facade for sentences"
+    chart: ../../../../k8s-sentences-sentence/helm/sentence
+    namespace: default
+    enabled: true
+    priority: 0
+    wait: true
+    version: 0.1.0
+    set:
+      image.repository: "releasepraqma/sentence"
+      image.tag:        "latest"

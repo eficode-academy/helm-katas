@@ -1,0 +1,12 @@
+version: '2'
+
+services:
+  web:
+    image: releasepraqma/sentence:latest
+    command: --age-service http://age:8080 --name-service http://name:8080
+    ports: 
+      - 8080:8080
+  name:
+    image: releasepraqma/name:latest
+  age:
+    image: releasepraqma/age:latest
