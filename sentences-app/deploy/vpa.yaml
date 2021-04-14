@@ -1,0 +1,19 @@
+apiVersion: "autoscaling.k8s.io/v1beta2"
+kind: VerticalPodAutoscaler
+metadata:
+  name: sentence
+spec:
+  targetRef:
+    apiVersion: "apps/v1"
+    kind: Deployment
+    name: sentences
+  resourcePolicy:
+    containerPolicies:
+      - containerName: "sentences"
+        minAllowed:
+          memory: 300Mi
+        maxAllowed:
+          memory: 1Gi
+  updatePolicy:
+    # "Auto" means both on POD creation and update of existing PODs
+    updateMode: "Auto"

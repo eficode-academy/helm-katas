@@ -1,0 +1,19 @@
+apiVersion: autoscaling/v2beta2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: sentences
+spec:
+  maxReplicas: 5
+  minReplicas: 1
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: sentences
+  metrics:
+  - type: Pods
+    pods:
+      metric:
+        name: sentence_requests_per_second
+      target:
+        type: AverageValue
+        averageValue: 25
