@@ -1,0 +1,14 @@
+sentences:
+  replicas: 3
+  image:
+    repository: releasepraqma/sentence
+    tag: latest
+  service:
+    # type: ClusterIP
+    type: NodePort
+    nodePort: 3000
+  resources:
+    requests:
+      cpu: 0.25
+    limits:
+      cpu: 0.25
