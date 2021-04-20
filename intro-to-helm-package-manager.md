@@ -66,28 +66,30 @@ command.
 
 - Add stable chart repository to your helm cli
 - Install Mysql chart
-- Look at the status of the deployment with `helm`
-  and `kubectl`
+- Look at the status of the deployment with
+  `helm ls`
+- Clean up the chart deployment
 
 ### Step by step
 
 <details>
       <summary>More details</summary>
+
+**Add stable chart repository to your helm cli**
+
 To install the official Helm Repo and update
 Helm's local list of Charts, run:
 
-```
-helm repo add stable https://charts.helm.sh/stable
-helm repo update
-```
+- `helm repo add stable https://charts.helm.sh/stable`
+- `helm repo update`
+
+**Install MySql Chart**
 
 Instead of figuring out which docker images to run
 manually, we will let helm find them. Let helm
 install MySql:
 
-```
-helm install stable/mysql
-```
+- `helm install stable/mysql`
 
 This will output information about your newly
 deployed mysql setup similar to this:
@@ -116,10 +118,11 @@ NAME                     CLUSTER-IP  EXTERNAL-IP  PORT(S)   AGE
 invinvible-serval-mysql  10.0.0.25   <none>       3306/TCP  0s
 ```
 
+**Look at the status of the deployment with `helm`
+and `kubectl`**
+
 Running `helm ls` will show all current
-deployments and `helm delete <deployment name>`
-(in above example helm delete invinvible-serval)
-will remove the service again.
+deployments.
 
 > :bulb: As said before Helm deals with the
 > concept of
@@ -134,5 +137,11 @@ will remove the service again.
 > The charts describe which values can be given
 > for overwriting default behavior, and there is
 > an active community around it.
+
+**Clean up the chart deployment**
+
+- `helm delete <deployment name>` (in above
+  example helm delete invinvible-serval) will
+  remove the service again.
 
 </details>
