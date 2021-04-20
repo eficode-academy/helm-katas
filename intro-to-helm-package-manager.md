@@ -47,8 +47,8 @@ connection to any default repositories. This is
 because Helm wants to decouple the application to
 the repository in use.
 
-The
-[official Helm Chart Repository](https://charts.helm.sh/stable)
+One of the largest Chart Repositories is the
+[BitNami Chart Repository](https://charts.bitnami.com/bitnami)
 is however going to be used in these exercises.
 
 The chart repository are very dynamic due to
@@ -64,8 +64,9 @@ command.
 
 ### Overview
 
-- Add stable chart repository to your helm cli
-- Install Mysql chart
+- Add a chart repository to your helm cli
+- Install Nginx chart
+- Access the Nginx load balanced service
 - Look at the status of the deployment with
   `helm ls`
 - Clean up the chart deployment
@@ -75,48 +76,63 @@ command.
 <details>
       <summary>More details</summary>
 
-**Add stable chart repository to your helm cli**
+**Add a chart repository to your helm cli**
 
-To install the official Helm Repo and update
-Helm's local list of Charts, run:
+To install the Bitnami Helm Repo and update Helm's
+local list of Charts, run:
 
-- `helm repo add stable https://charts.helm.sh/stable`
+- `helm repo add bitnami https://charts.bitnami.com/bitnami`
 - `helm repo update`
 
-**Install MySql Chart**
+**Install Nginx Chart**
 
-Instead of figuring out which docker images to run
-manually, we will let helm find them. Let helm
-install MySql:
+To get something installed fasted and easy we have
+chosen the Nginx chart.
 
-- `helm install stable/mysql`
+- `helm install my-release bitnami/nginx`
 
-This will output information about your newly
-deployed mysql setup similar to this:
+This command creates a release called `my-release`
+with the bitnami/nginx chart.
+
+The command will output information about your
+newly deployed mysql setup similar to this:
 
 ```
-NAME:   invinvible-serval
-LAST DEPLOYED: Tue Nov 14 14:46:15 2017
-NAMESPACE: default
-STATUS: DEPLOYED
+NAME: my-release
+LAST DEPLOYED: Tue Apr 20 12:46:10 2021
+NAMESPACE: user1
+STATUS: deployed
+REVISION: 1
+TEST SUITE: None
+NOTES:
+** Please be patient while the chart is being deployed **
 
-RESOURCES:
-==> v1beta1/Deployment
-NAME                     DESIRED  CURRENT  UP-TO-DATE  AVAILABLE  AGE
-invinvible-serval-mysql  1        1        1           0          0s
+NGINX can be accessed through the following DNS name from within your cluster:
 
-==> v1/Secret
-NAME                     TYPE    DATA  AGE
-invinvible-serval-mysql  Opaque  2     0s
+    my-release-nginx.user1.svc.cluster.local (port 80)
 
-==> v1/PersistentVolumeClaim
-NAME                     STATUS  VOLUME                                    CAPACITY  ACCESSMODES  STORAGECLASS  AGE
-invinvible-serval-mysql  Bound   pvc-2f95ebb1-c942-11e7-9e2e-080027f4e367  8Gi       RWO          standard      0s
+To access NGINX from outside the cluster, follow the steps below:
 
-==> v1/Service
-NAME                     CLUSTER-IP  EXTERNAL-IP  PORT(S)   AGE
-invinvible-serval-mysql  10.0.0.25   <none>       3306/TCP  0s
+1. Get the NGINX URL by running these commands:
+
+  NOTE: It may take a few minutes for the LoadBalancer IP to be available.
+        Watch the status with: 'kubectl get svc --namespace user1 -w my-release-nginx'
+
+    export SERVICE_PORT=$(kubectl get --namespace user1 -o jsonpath="{.spec.ports[0].port}" services my-release-nginx)
+    export SERVICE_IP=$(kubectl get svc --namespace user1 my-release-nginx -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+    echo "http://${SERVICE_IP}:${SERVICE_PORT}"
 ```
+
+**Access the Nginx load balanced service**
+
+Get the external IP and port with the following
+three commands.
+
+- `export SERVICE_PORT=$(kubectl get --namespace user1 -o jsonpath="{.spec.ports[0].port}" services my-release-nginx)`
+- `export SERVICE_IP=$(kubectl get svc --namespace user1 my-release-nginx -o jsonpath='{.status.loadBalancer.ingress[0].ip}')`
+- `echo "http://${SERVICE_IP}:${SERVICE_PORT}"`
+- Navigate your browser to the url printed out by
+  the last command
 
 **Look at the status of the deployment with `helm`
 and `kubectl`**
@@ -124,24 +140,30 @@ and `kubectl`**
 Running `helm ls` will show all current
 deployments.
 
+- Run `helm ls` and observe that you have a
+  release named `my-release`
+- Run `kubectl get pods,deployments,svc` and look
+  at a few of the kubernetes objects the release
+  created.
+
 > :bulb: As said before Helm deals with the
 > concept of
 > [charts](https://github.com/kubernetes/charts)
-> for its deployment logic. Stable/mysql was a
+> for its deployment logic. bitnami/nginx was a
 > chart,
-> [found here](https://github.com/kubernetes/charts/tree/master/stable/mysql)
+> [found here](https://github.com/bitnami/charts/tree/master/bitnami/nginx)
 > that describes how helm should deploy it. It
 > interpolates values into the deployment, which
-> for mysql looks
-> [like this](https://github.com/kubernetes/charts/blob/master/stable/mysql/templates/>deployment.yaml).
+> for nginx looks
+> [like this](https://github.com/bitnami/charts/blob/master/bitnami/nginx/templates/deployment.yaml).
 > The charts describe which values can be given
 > for overwriting default behavior, and there is
 > an active community around it.
 
 **Clean up the chart deployment**
 
-- `helm delete <deployment name>` (in above
-  example helm delete invinvible-serval) will
-  remove the service again.
+To remove the `my-release` release run:
+
+- `helm uninstall my-release`
 
 </details>
