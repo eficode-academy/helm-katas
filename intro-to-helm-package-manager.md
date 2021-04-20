@@ -1,5 +1,11 @@
 # The Kubernetes package manager
 
+## Learning goal
+
+- Try the Helm cli to spin up a chart
+
+## Introduction
+
 [Enter Helm](https://github.com/helm/helm) - the
 answer to how to package multi-container
 applications, and how to easily install packages
@@ -23,6 +29,8 @@ Helm uses a packaging format called charts. A
 Chart is a collection of files that describe k8s
 resources.
 
+ <details>
+      <summary>More details</summary>
 Charts can be simple, describing something like a
 standalone web server but they can also be more
 complex, for example, a chart that represents a
@@ -34,20 +42,42 @@ kubectl, we can use Helm to install pre-defined
 Charts faster, with less chance of typos or other
 operator errors.
 
-When you install Helm, you are provided with a
-default repository of Charts from the
-[official Helm Chart Repository](https://artifacthub.io/).
+When you install Helm, it does not have a
+connection to any default repositories. This is
+because Helm wants to decouple the application to
+the repository in use.
 
-This is a very dynamic list that always changes
-due to updates and new additions. To keep Helm's
-local list updated with all these changes, we need
-to occasionally run the
+The
+[official Helm Chart Repository](https://charts.helm.sh/stable)
+is however going to be used in these exercises.
+
+The chart repository are very dynamic due to
+updates and new additions. To keep Helm's local
+list updated with all these changes, we need to
+occasionally run the
 [repository update](https://docs.helm.sh/helm/#helm-repo-update)
 command.
 
-To update Helm's local list of Charts, run:
+</details>
+
+## Exercise
+
+### Overview
+
+- Add stable chart repository to your helm cli
+- Install Mysql chart
+- Look at the status of the deployment with `helm`
+  and `kubectl`
+
+### Step by step
+
+<details>
+      <summary>More details</summary>
+To install the official Helm Repo and update
+Helm's local list of Charts, run:
 
 ```
+helm repo add stable https://charts.helm.sh/stable
 helm repo update
 ```
 
@@ -91,21 +121,18 @@ deployments and `helm delete <deployment name>`
 (in above example helm delete invinvible-serval)
 will remove the service again.
 
-As said before Helm deals with the concept of
-[charts](https://github.com/kubernetes/charts) for
-its deployment logic. Stable/mysql was a chart,
-[found here](https://github.com/kubernetes/charts/tree/master/stable/mysql)
-that describes how helm should deploy it. It
-interpolates values into the deployment, which for
-mysql looks
-[like this](https://github.com/kubernetes/charts/blob/master/stable/mysql/templates/deployment.yaml).
+> :bulb: As said before Helm deals with the
+> concept of
+> [charts](https://github.com/kubernetes/charts)
+> for its deployment logic. Stable/mysql was a
+> chart,
+> [found here](https://github.com/kubernetes/charts/tree/master/stable/mysql)
+> that describes how helm should deploy it. It
+> interpolates values into the deployment, which
+> for mysql looks
+> [like this](https://github.com/kubernetes/charts/blob/master/stable/mysql/templates/>deployment.yaml).
+> The charts describe which values can be given
+> for overwriting default behavior, and there is
+> an active community around it.
 
-The charts describe which values can be given for
-overwriting default behaviour, and there is an
-active community around it.
-
-Praqma also has
-[Helmsman](https://github.com/Praqma/Helmsman)
-which is another layer of abstraction on top of
-Helm, allowing it to be automated as code
-deployments.
+</details>
