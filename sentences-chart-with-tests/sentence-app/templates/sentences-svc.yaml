@@ -4,10 +4,10 @@ metadata:
   labels:
     app: sentences
     component: main
-  name: sentence
+  name: {{ .Values.sentences.service.name }}
 spec:
   ports:
-    - port: 8080
+    - port: {{ .Values.sentences.service.port }}
       protocol: TCP
       targetPort: 8080
       {{ if and (eq .Values.sentences.service.type "NodePort") .Values.sentences.service.nodePort -}}

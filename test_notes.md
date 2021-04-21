@@ -10,10 +10,9 @@ Each job definition must contain the helm test annotation: `helm.sh/hook: test`.
 ## Examples of helm tests
 
 - Test that values from `values.yaml` were successfully injected into the rendered yaml.
+- Test that services are correctly serving traffic on the endpoints expected.
 - Test that credentials work as expected.
 - Test that invalid credentials do not work.
-- Test that services are correctly serving traffic on the endpoints expected.
-- Test that services are correctly load balanced.
 
 ## Writing Tests
 
@@ -39,8 +38,17 @@ Test spec files should be located in the `/templates` directory, you may put the
 
 A helm test is actually a `helm hook` (https://helm.sh/docs/topics/charts_hooks/), so you can use other annotations in conjunction with test resources for more advanced test behaviour.
 
-By default test pods will hang around in a the `completed state`
+By default test pods will hang around in the `Completed` state.
+We can use the `"helm.sh/hook-delete-policy": hook-succeeded` hook to delete the pods after they have exited successfully.
 
+You can have multiple containers in a test pod, and the test pod will only be successful if all of the pod containers are successful, however the `helm test --logs <deployment>` will not work, as helm cannot figure out how to get the logs from the multi-container pod.
+Therefore best practice would be to have each test in it's own pod.
+
+When installing helm charts, and wanting to test them afterwards, one should take care to only execute tests when the deployment is ready.
+This can be achieved by using the `--wait` flag:
+```sh
+helm install --wait <deployment> <chart>
+```
 
 # Debugging helm charts
 

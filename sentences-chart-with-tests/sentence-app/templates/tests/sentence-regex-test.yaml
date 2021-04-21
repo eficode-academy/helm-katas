@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "{{ .Release.Name }}-{{ .Values.sentences.service.name }}-regex-test"
+  annotations:
+    # this annotations is what makes this pod spec a helm test!
+    "helm.sh/hook": test
+    # we can use this hook to automatically delete the pod
+    # after the test has succussfully run, but keep the pod if it fails
+    # such that we can inspect why the test failed
+    # "helm.sh/hook-delete-policy": hook-succeeded
+spec:
+  restartPolicy: Never
+  containers:
+    - name: "{{ .Release.Name }}-{{ .Values.sentences.service.name }}-regex-test"
+      image: zandertraining/sentence-regex-test:latest
+      # note that 'args' corresponds to 'CMD' in a Dockerfile,
+      # so will add as argument to the 'ENTRYPOINT', the entrypoint
+      # can be overwritten with the kubernetes 'command' key.
+      args: ["http://{{ .Values.sentences.service.name }}:{{ .Values.sentences.service.port }}"]

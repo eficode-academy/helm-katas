@@ -1,5 +1,5 @@
 sentences:
-  replicas: 3
+  replicas: 1
   image:
     repository: releasepraqma/sentence
     tag: latest
@@ -7,6 +7,8 @@ sentences:
     # type: ClusterIP
     type: NodePort
     nodePort: 31234
+    port: 9090
+    name: sentence
   resources:
     requests:
       cpu: 0.25
