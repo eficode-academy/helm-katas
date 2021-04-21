@@ -6,7 +6,7 @@ sentences:
   service:
     # type: ClusterIP
     type: NodePort
-    nodePort: 3000
+    nodePort: 31234
   resources:
     requests:
       cpu: 0.25

@@ -38,3 +38,15 @@ Each test is a `pod` job spec, in one or several `.yaml` files.
 Test spec files should be located in the `/templates` directory, you may put them in a sub directory like `/templates/tests` for a clean code structure.
 
 A helm test is actually a `helm hook` (https://helm.sh/docs/topics/charts_hooks/), so you can use other annotations in conjunction with test resources for more advanced test behaviour.
+
+By default test pods will hang around in a the `completed state`
+
+
+# Debugging helm charts
+
+When templating, and errors are encountered, use `--debug` to render yaml anyway, to see what the problem is.
+
+For example:
+```
+helm template sentence-app --debug --show-only templates/sentences-deployment.yaml
+```
