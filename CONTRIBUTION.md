@@ -2,15 +2,14 @@
 
 ## Best practices
 
-When ever you think there is too much text, but
-that it is needed for some, please use
+When ever you think there is too much text, but that it is necessary, please use the `details` tag to make the text toggleable, by clicking the arrow:
 
- <details>
-      <summary>A Hint</summary>
+<details>
+    <summary>A Hint</summary>
     It helps reducing the amount of word overload that we sometimes write
-    </details>
+</details>
 
-The code to make this happen is the following
+The code to make this happen is the following:
 
 ```markdown
 <details>

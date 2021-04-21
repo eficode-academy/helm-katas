@@ -29,7 +29,7 @@ Helm uses a packaging format called charts. A
 Chart is a collection of files that describe k8s
 resources.
 
- <details>
+<details>
       <summary>More details</summary>
 Charts can be simple, describing something like a
 standalone web server but they can also be more
@@ -48,14 +48,14 @@ because Helm wants to decouple the application to
 the repository in use.
 
 One of the largest Chart Repositories is the
-[BitNami Chart Repository](https://charts.bitnami.com/bitnami)
-is however going to be used in these exercises.
+[BitNami Chart Repository](https://charts.bitnami.com/bitnami),
+which we will be using in these exercises.
 
-The chart repository are very dynamic due to
+Helm chart repositories are very dynamic due to
 updates and new additions. To keep Helm's local
 list updated with all these changes, we need to
 occasionally run the
-[repository update](https://docs.helm.sh/helm/#helm-repo-update)
+[repository update](https://helm.sh/docs/helm/helm_repo_update/)
 command.
 
 </details>
@@ -86,8 +86,7 @@ local list of Charts, run:
 
 **Install Nginx Chart**
 
-To get something installed fasted and easy we have
-chosen the Nginx chart.
+We use the Nginx chart because it is fast and easy to install, and allows us to access the Nginx webserver from our browser to verify that it was deployed.
 
 - `helm install my-release bitnami/nginx`
 
@@ -127,6 +126,8 @@ To access NGINX from outside the cluster, follow the steps below:
 
 Get the external IP and port with the following
 three commands.
+> :bulb: You must change `user1` in the below commands to your namespace.
+> You can find your namespace with the command `kubectl config view | grep namespace`.
 
 - `export SERVICE_PORT=$(kubectl get --namespace user1 -o jsonpath="{.spec.ports[0].port}" services my-release-nginx)`
 - `export SERVICE_IP=$(kubectl get svc --namespace user1 my-release-nginx -o jsonpath='{.status.loadBalancer.ingress[0].ip}')`
