@@ -9,6 +9,7 @@ Natural progression:
 - create-a-helm-chart.md
 - helm-chart-with-parameters.md
 - helm-and-helmsman.md
+- test-helm-deployments.md
 
 ## How to Read Exercise Files
 

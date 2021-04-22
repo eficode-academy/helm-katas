@@ -3,7 +3,7 @@ kind: Pod
 metadata:
   name: "{{ .Release.Name }}-{{ .Values.sentences.service.name }}-svc-test"
   annotations:
-    # this annotations is what makes this pod spec a helm test!
+    # this annotation is what makes this pod spec a helm test!
     "helm.sh/hook": test
     # we can use this hook to automatically delete the pod
     # after the test has succussfully run, but keep the pod if it fails
