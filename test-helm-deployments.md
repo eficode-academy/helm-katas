@@ -1,6 +1,6 @@
 # Testing Helm Deployments
 
-## Learning Goal
+## Learning Goals
 
 - Write helm deployment tests
 - Test deployments with the `helm test` command
@@ -134,7 +134,8 @@ metadata:
 
 [Further Reading](https://helm.sh/docs/topics/charts_hooks/)
 
-##### (Don't Put) Multiple Tests in the same Pod
+##### (Don't Put) Multiple Test-Containers in the same Pod
+TODO rewrite for clarity
 
 Best practice when writing helm tests is to have each test container in it's own pod, but you can technically add as many containers to your test pods as you want.
 Having multiple containers in the same pod, will mean that the pod will only succeed if all of the containers exit successfully, and the pod will fail if just one of the containers exit unsuccessfully.
@@ -175,6 +176,8 @@ Hence the above command would first install the chart, then wait for all of the 
 
 
 </details>
+
+TODO add example helm chart to work from if student has not done previous exercises
 
 ## Exercise
 
@@ -223,7 +226,7 @@ If the curl command does not recieve a 200 response, the container will exit wit
 
 Thus we can use this simple test to verify that after we have installed our chart, that our servies are actually responding!
 
-##### * Execute the sentence service test
+#### * Execute the sentence service test
 
 Now let's execute the new test that we have created.
 First we have to deploy the test to the Kubernetes cluster, we can do that by upgrading the existing deployment.
@@ -275,7 +278,7 @@ Clean up the test pod:
 $ kubectl delete pod sentences-sentece-svc-test
 ```
 
-##### * Improve your test by using helm templating to check that values are injected correctly in the sentence service
+#### * Improve your test by using helm templating to check that values are injected correctly in the sentence service
 
 Now let's test the templating functionality of helm.
 
@@ -307,15 +310,51 @@ spec:
 ```
 
 
+Next we change the test to use the same service name and port:
+
+Change `templates/tests/sentence-svc-test.yaml` from:
+```yaml
+...
+spec:
+  ...
+  containers:
+    ...
+      command: ["curl", "-s", "sentence:8080"]
+```
+
+To:
+```yaml
+...
+spec:
+  ...
+  containers:
+    ...
+      command: ["curl", "-s", "{{ .Values.sentences.service.name }}:{{ .Values.sentences.service.port }}"]
+```
+
+Next we add the service name and port values to the `values.yaml`.
+Edit `sentence-app/values.yaml`, and add the `name: sentence` and `port: 9090` values under the sentence service:
+```yaml
+sentences:
+  ...
+  service:
+    ...
+    port: 9090
+    name: sentence
+```
+
+Now when we upgrade the deployment, the service will using this specific name and port, which means that we check that helm correctly injects the values with our test, since it uses the same value injection to test the endpoint.
+
+#### * Execute the improved sentence service test
+
+Upgrade the helm installation like you did before, and run the test the same way as before.
+Remember to clean up the test pod after the test has run.
+
+#### * Add a new test which uses regex to check that the returned body of the sentence service is correct
+#### * Execute both tests
 
 ```yaml
 ```
-
-```yaml
-```
-##### * Execute the improved sentence service test
-##### * Add a new test which uses regex to check that the returned body of the sentence service is correct
-##### * Execute both tests
 
 <!-- </details> -->
 
