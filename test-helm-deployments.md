@@ -177,8 +177,6 @@ Hence the above command would first install the chart, then wait for all of the 
 
 </details>
 
-TODO add example helm chart to work from if student has not done previous exercises
-
 ## Exercise
 
 ### Overview
@@ -190,10 +188,14 @@ TODO add example helm chart to work from if student has not done previous exerci
 - Add a new test which uses regex to check that the returned body of the sentence service is correct
 - Execute both tests
 
+To do the exercises you can use the sentence helm chart you have already created.
+The directory `helm-test/sentence-test-start` contains a clean starting point if you need it.
+If you get stuck on any of the exercises, or want to see how the finished chart should look, you can look at the finished chart `helm-test/sentence-test-done`.
+
 ### Step by Step
 
-<!-- <details> -->
-<!-- <summary>More Details</summary> -->
+<details>
+<summary>More Details</summary>
 
 ##### * Add a helm test which checks that the sentence service is reachable
 
@@ -220,21 +222,22 @@ spec:
       command: ["curl", "-s", "sentence:8080"]
 ```
 
-This helm test will run a pod, the pod will run a single container, which will curl the sentence service.
-If the curl command recieved a 200 response, then the container will exit with code 0, indicating a success.
-If the curl command does not recieve a 200 response, the container will exit with a code that is greater than 0, indicating a failed test.
+This helm test will run a pod, the pod will run a single container, which will use the curl command to make a HTTP request to the sentence service.
+If the curl command receives a 200 response, then the container will exit with code 0, indicating a success.
+If the curl command does not receive a 200 response, the container will exit with a code that is greater than 0, indicating a failed test.
 
-Thus we can use this simple test to verify that after we have installed our chart, that our servies are actually responding!
+Thus we can use this simple test to verify that after we have installed our chart, that our services are actually responding!
 
 #### * Execute the sentence service test
 
 Now let's execute the new test that we have created.
-First we have to deploy the test to the Kubernetes cluster, we can do that by upgrading the existing deployment.
+First we have to deploy the test to the Kubernetes cluster, so that Kubernetes knows what to do when we issue the test command, we can do that by upgrading the existing deployment.
+If the chart is not currently installed, you should install it instead of upgrading.
 ```sh
 $ helm upgrade sentences sentence-app
 Release "sentences" has been upgraded. Happy Helming!
 NAME: sentences
-LAST DEPLOYED: Thu Apr 22 14:49:03 2021
+LAST DEPLOYED: Wed Apr 28 08:42:36 2021
 NAMESPACE: default
 STATUS: deployed
 REVISION: 2
@@ -248,13 +251,13 @@ Now execute the test:
 ```sh
 $ helm test sentences
 NAME: sentences
-LAST DEPLOYED: Thu Apr 22 14:49:03 2021
+LAST DEPLOYED: Wed Apr 28 08:42:36 2021
 NAMESPACE: default
 STATUS: deployed
 REVISION: 2
 TEST SUITE:     sentences-sentence-svc-test
-Last Started:   Thu Apr 22 14:49:33 2021
-Last Completed: Thu Apr 22 14:49:38 2021
+Last Started:   Wed Apr 28 08:42:41 2021
+Last Completed: Wed Apr 28 08:42:45 2021
 Phase:          Succeeded
 ```
 
@@ -264,10 +267,11 @@ We can inspect the test pod:
 ```sh
 $ kubectl get pods
 NAME                             READY   STATUS      RESTARTS   AGE
-sentence-age-7c948b5d88-wwhj7    1/1     Running     0          6m21s
-sentence-name-5687d74d64-49skg   1/1     Running     0          6m21s
-sentences-668bd45d9-cmx5v        1/1     Running     0          6m21s
-sentences-sentence-svc-test      0/1     Completed   0          3m25s
+NAME                             READY   STATUS      RESTARTS   AGE
+sentence-age-7c948b5d88-vrmbp    1/1     Running     0          3m27s
+sentence-name-5687d74d64-mmhzs   1/1     Running     0          3m27s
+sentences-668bd45d9-t5gn4        1/1     Running     0          3m27s
+sentences-sentence-svc-test      0/1     Completed   0          2m58s
 
 $ kubectl logs sentences-sentence-svc-test
 Michael is 17 years
@@ -343,25 +347,93 @@ sentences:
     name: sentence
 ```
 
-Now when we upgrade the deployment, the service will using this specific name and port, which means that we check that helm correctly injects the values with our test, since it uses the same value injection to test the endpoint.
+This change enables us to template the service name and port that the sentence service will use.
+The cool thing is that we can use the same templating in our test specification.
+This is cool because we can use it to test that the service is actually using the values we have specified.
 
 #### * Execute the improved sentence service test
 
 Upgrade the helm installation like you did before, and run the test the same way as before.
+
+The test should succeed.
+
 Remember to clean up the test pod after the test has run.
 
 #### * Add a new test which uses regex to check that the returned body of the sentence service is correct
-#### * Execute both tests
 
+Helm test pod specs can contain any container executing arbitrary commands.
+Let's try a more elaborate test.
+We will use regex to test that the body of the HTTP response follows an exepcted pattern, in order verify that the service is not only responding, but returns the correct result.
+
+The sentence application returns a response that looks like this:
+```
+Terry is 89 years
+```
+We can break that into a pattern with four sections: a capitalized name, the word 'is', a number and finally the word 'years'.
+
+We can create a regex statement to match this:
+```regex
+^[A-Z][a-z]+\ is\ \d+\ years$
+```
+If you are not sure how regex works, then don't worry, the important part is that this statement will verify that a response from the service follows the pattern outlined above.
+
+We could verify the regex using shell commands, but that can get messy and hard to maintain, so let's use programming language to write our test in.
+
+We have prepared a small golang program that will query the endpoint and very the regex.
+The golang code is located in `helm-test/sentence-regex-test/sentence_regex.go`, but the implementation is not important for the purpose of this exercise.
+The program will return a exit code 0 if the regex matches, and 1 if it does not.
+The program has already been packaged in a [docker image](https://hub.docker.com/r/releasepraqma/sentence-regex-test) so that we can use it a test spec.
+
+We add a new test spec:
+
+Create a new file: `sentence-app/templates/tests/sentence-regex-test.yaml`
+
+And add the code:
 ```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "{{ .Release.Name }}-sentence-regex-test"
+  annotations:
+    "helm.sh/hook": test
+spec:
+  restartPolicy: Never
+  containers:
+    - name: "{{ .Release.Name }}-sentence-regex-test"
+      image: releasepraqma/sentence-regex-test:latest
+      args: ["http://{{ .Values.sentences.service.name }}:{{ .Values.sentences.service.port }}"]
 ```
 
-<!-- </details> -->
+The above pod spec should look familiar, and the interesting to note is that it uses the image with the regex golang test, and takes the templated endpoint as it's argument.
 
 
-## Going Further
+#### * Execute both tests
 
-testing credentials -> bitnami mysql chart
-test other aspects of helm
-test that rendered yaml is correct
-lint
+Now upgrade the helm chart to install the new test.
+
+Execute the test command.
+This time helm will execute both of our tests sequentially:
+
+```sh
+$ helm test sentences
+NAME: sentences
+LAST DEPLOYED: Wed Apr 28 09:30:59 2021
+NAMESPACE: default
+STATUS: deployed
+REVISION: 3
+TEST SUITE:     sentences-sentence-regex-test
+Last Started:   Wed Apr 28 09:31:08 2021
+Last Completed: Wed Apr 28 09:31:13 2021
+Phase:          Succeeded
+TEST SUITE:     sentences-sentence-svc-test
+Last Started:   Wed Apr 28 09:31:13 2021
+Last Completed: Wed Apr 28 09:31:14 2021
+Phase:          Succeeded
+
+$ kubectl logs sentences-sentence-regex-test
+2021/04/28 07:31:13 response: ' Michael is 13 years ' is valid.
+```
+
+You can add as many tests as you need to your helm chart, and the `test` command will execute all of them.
+
+</details>

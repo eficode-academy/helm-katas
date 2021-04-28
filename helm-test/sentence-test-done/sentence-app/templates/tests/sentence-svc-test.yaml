@@ -10,4 +10,4 @@ spec:
   containers:
     - name: "{{ .Release.Name }}-sentence-svc-test"
       image: praqma/network-multitool:minimal
-      command: ["curl", "-s", "sentence:8080"]
+      command: ["curl", "-s", "{{ .Values.sentences.service.name }}:{{ .Values.sentences.service.port }}"]

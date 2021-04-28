@@ -4,9 +4,9 @@ sentences:
     repository: releasepraqma/sentence
     tag: latest
   service:
-    type: ClusterIP
-    port: 9090
+    type: NodePort
     name: sentence
+    port: 9090
   resources:
     requests:
       cpu: 0.25
