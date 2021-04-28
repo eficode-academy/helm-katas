@@ -7,16 +7,23 @@
 
 ## Introduction
 
-There are multiple aspects of a helm chart that one might want to test, such as if the rendered Kubernetes yaml is correct, whether values are injected correctly into the rendered yaml, and that when a chart is deployed, that the services started are working as expected.
-This Exercise will deal will deal with the two latter, verifying that the injected values are correct, and testing that deployments work as expected.
+There are multiple aspects of a helm chart that one might want to test:
+
+- if the rendered Kubernetes yaml is correctly formatted and valid
+- whether values are injected correctly into the rendered yaml
+- when a chart is deployed, that the services started are working as expected.
+- and many more...
+
+This Exercise will deal with the two latter, verifying that the injected values are correct, and testing that deployments work as expected.
 
 Helm provides functionality for orchestrating tests, using the `helm test` command.
+
 Tests are defined as a number of `pod specs` which include the `test annotation` in their metadata dictionary.
 
 ## Writing Helm Tests
 
 A helm test consists of a `pod spec` with a specific annotation: `helm.sh/hook: test`.
-As the annotation implies, this is actually a `helm hook`, meaning that all of the pod specs with this annotation are executed when the helm test command is issued.
+As the annotation implies, this is actually a `helm hook`, meaning that all of the pod specs with this annotation are executed when the `helm test` command is issued.
 
 The hook is an annotation to the metadata of the pod:
 
@@ -31,7 +38,10 @@ metadata:
 ...
 ```
 
-Test pod specs can be located anywhere in the in the `<chart>/templates` directory, though it is convention to place tests in a separate directory called `tests`, eg. `<chart>/templates/tests`.
+<details>
+<summary>:bulb: tip</summary>
+>Test pod specs can be located anywhere in the in the `<chart>/templates` >directory, though it is convention to place tests in a separate directory >called `tests`, eg. `<chart>/templates/tests`.
+</details>
 
 [Further Reading](https://helm.sh/docs/topics/chart_tests/)
 
@@ -58,11 +68,11 @@ spec:
       command: ["example-command", "example-argument"]
 ```
 
-**Note** that we set the `restartPolicy` to `Never`.
-If we do not specify a restart policy, Kubernetes will try to be helpful, and will keep restarting our test pods, which will eventually fail the test once it reaches it's timeout.
-Therefore make sure to specify the `restartPolicy`.
+>:bulb: Note that we set the `restartPolicy` to `Never`.
+>If we do not specify a restart policy, Kubernetes will try to be helpful, and will keep restarting our test pods, which will eventually fail the test once it reaches it's timeout.
+>Therefore make sure to specify the `restartPolicy`.
 
-You can of course use all of the functionality of normal pod specs when writing tests, as well as use variable injection to template the tests themselves.
+You can use all of the functionality of normal pod specs when writing tests.
 
 Here is an example test that will check if the http endpoint of the sentences application responds to requests:
 
@@ -88,6 +98,7 @@ When writing helm tests, you are likely to want to override the origin `ENTRYPOI
 In kubernetes this is done, slightly unintuitively, by using the `command` key of the container spec to define the `ENTRYPOINT`, and the `args` key to define the `CMD` of the container.
 
 An example of overwriting the entrypoint of container:
+
 ```yaml
 spec:
   containers:
@@ -96,6 +107,7 @@ spec:
 ```
 
 An example of overwriting both the entrypoint (with `command`) and the cmd (with `args`)
+
 ```yaml
 spec:
   containers:
@@ -103,6 +115,7 @@ spec:
       command: ["curl"]
       args: ["-s", "sentence:8080"]
 ```
+
 You can of course also use `args` by itself without modifying the `command`.
 
 [Further Reading](https://kubernetes.io/docs/tasks/inject-data-application/define-command-argument-container/)
@@ -134,17 +147,19 @@ metadata:
 
 [Further Reading](https://helm.sh/docs/topics/charts_hooks/)
 
-##### (Don't Put) Multiple Test-Containers in the same Pod
+<details>
+<summary>:bulb: (Don't Put) Multiple Test-Containers in the same Pod</summary>
 
-Best practice when writing helm tests is to have each test container in it's own pod, but you can technically add as many containers to your test pods as you want.
-Having multiple containers in the same pod, will mean that the pod will only succeed if all of the containers exit successfully, and the pod will fail if just one of the containers exit unsuccessfully.
-This can be a useful pattern in certain cases, but you should know that if do so, the `helm test --logs` command will not work, as helm will not know which of the containers in the pod to get logs from, and it will be up to you to gather the logs some other way.
-Therefore best practice is to put each test into it's own pod, such that all test logs can be viewed easily.
+>Best practice when writing helm tests is to have each test container in it's own pod, but you can technically add as many containers to your test pods as you want.
+>Having multiple containers in the same pod, will mean that the pod will only succeed if all of the containers exit successfully, and the pod will fail if just one of the containers exit unsuccessfully.
+>This can be a useful pattern in certain cases, but you should know that if do so, the `helm test --logs` command will not work, as helm will not know which of the containers in the pod to get logs from, and it will be up to you to gather the logs some other way.
+>Therefore best practice is to put each test into it's own pod, such that all test logs can be viewed easily.
+
+</details>
 
 </details>
 
 ## Executing Helm Tests
-
 
 Helm tests are executed with the `helm test` command followed by the name of the release name and optional flags.
 ```sh
