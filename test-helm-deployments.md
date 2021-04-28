@@ -135,11 +135,10 @@ metadata:
 [Further Reading](https://helm.sh/docs/topics/charts_hooks/)
 
 ##### (Don't Put) Multiple Test-Containers in the same Pod
-TODO rewrite for clarity
 
 Best practice when writing helm tests is to have each test container in it's own pod, but you can technically add as many containers to your test pods as you want.
 Having multiple containers in the same pod, will mean that the pod will only succeed if all of the containers exit successfully, and the pod will fail if just one of the containers exit unsuccessfully.
-Do note that if you do so, the `helm test --logs` command will not work, as helm will not know which of the containers in the pod to get logs from.
+This can be a useful pattern in certain cases, but you should know that if do so, the `helm test --logs` command will not work, as helm will not know which of the containers in the pod to get logs from, and it will be up to you to gather the logs some other way.
 Therefore best practice is to put each test into it's own pod, such that all test logs can be viewed easily.
 
 </details>
