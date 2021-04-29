@@ -162,9 +162,11 @@ metadata:
 ## Executing Helm Tests
 
 Helm tests are executed with the `helm test` command followed by the name of the release name and optional flags.
+
 ```sh
 $ helm test [RELEASE] [flags]
 ```
+
 This will run all test specified in the helm chart.
 
 [Further Reading](https://helm.sh/docs/helm/helm_test/)
@@ -173,21 +175,26 @@ This will run all test specified in the helm chart.
 <summary>More Details</summary>
 
 ##### Viewing Test Logs
+
 The stdout/stderr of the test pods can be conveniently viewed when running tests by using the `--logs` flag on the test command.
+
 ```sh
 $ helm test --logs [RELEASE]
 ```
+
 The above command will run all of the tests and print the logs of each of the tests.
 
 ##### Waiting for all Chart Resources to be Ready
-When deploying a helm chart that has tests, one will usually execute the tests each time a deployment of the chart is done.
-One has to note though that executing a `$ helm test` immediately after a `$ helm install` might produce false failed tests, as the helm test command does not check if all of the chart resources are ready.
+
+If you are testing a newly deployed helm release, you might end up with errors because the release have not been completely deployed yet.
+
 To alleviate this we can use the `--wait` flag on the install command to make helm wait for all of the chart resources to be ready before moving to the next command.
+
 ```sh
 $ helm install --wait [RELEASE] [CHART] && helm test [RELEASE]
 ```
-Hence the above command would first install the chart, then wait for all of the chart resources to be in the ready state, and then run the tests.
 
+Hence the above command would first install the chart, then wait for all of the chart resources to be in the ready state, and then run the tests.
 
 </details>
 
@@ -203,7 +210,8 @@ Hence the above command would first install the chart, then wait for all of the 
 - Execute both tests
 
 To do the exercises you can use the sentence helm chart you have already created.
-The directory `helm-test/sentence-test-start` contains a clean starting point if you need it.
+Otherwise, the directory `helm-test/sentence-test-start` contains a clean starting point if you need it.
+
 If you get stuck on any of the exercises, or want to see how the finished chart should look, you can look at the finished chart `helm-test/sentence-test-done`.
 
 ### Step by Step
@@ -211,15 +219,16 @@ If you get stuck on any of the exercises, or want to see how the finished chart 
 <details>
 <summary>More Details</summary>
 
-##### * Add a helm test which checks that the sentence service is reachable
+**Add a helm test which checks that the sentence service is reachable**
 
-Start by adding a `tests` directory to the templates of your sentences helm chart:
+Start by adding a `tests` directory to the `templates` directory of your sentences helm chart:
+
 ```sh
 mkdir sentence-app/templates/tests
 ```
-(assuming that your helm chart is called `sentence-app`)
 
-Create a file in the new tests directory called `sentence-svc-test.yaml`, and add the following code to the file:
+Create a file in the new tests directory called `sentence-svc-test.yaml`, and add the following podspec to the file:
+
 ```yaml
 apiVersion: v1
 kind: Pod
@@ -236,17 +245,23 @@ spec:
       command: ["curl", "-s", "sentence:8080"]
 ```
 
-This helm test will run a pod, the pod will run a single container, which will use the curl command to make a HTTP request to the sentence service.
+<details>
+      <summary>More details</summary>
+
+This helm test will run a pod with a single container, which will use the curl command to make a HTTP request to the sentence service.
 If the curl command receives a 200 response, then the container will exit with code 0, indicating a success.
 If the curl command does not receive a 200 response, the container will exit with a code that is greater than 0, indicating a failed test.
 
 Thus we can use this simple test to verify that after we have installed our chart, that our services are actually responding!
+
+</details>
 
 #### * Execute the sentence service test
 
 Now let's execute the new test that we have created.
 First we have to deploy the test to the Kubernetes cluster, so that Kubernetes knows what to do when we issue the test command, we can do that by upgrading the existing deployment.
 If the chart is not currently installed, you should install it instead of upgrading.
+
 ```sh
 $ helm upgrade sentences sentence-app
 Release "sentences" has been upgraded. Happy Helming!
@@ -262,6 +277,7 @@ Verify that all resources are correctly deployed with `kubectl get`.
 It is important that all pods are in the `ready` state, since otherwise we might get a false negative when we run the test.
 
 Now execute the test:
+
 ```sh
 $ helm test sentences
 NAME: sentences
@@ -278,6 +294,7 @@ Phase:          Succeeded
 As we can see from the output, the test executed successfully.
 
 We can inspect the test pod:
+
 ```sh
 $ kubectl get pods
 NAME                             READY   STATUS      RESTARTS   AGE
@@ -292,6 +309,7 @@ Michael is 17 years
 ```
 
 Clean up the test pod:
+
 ```sh
 $ kubectl delete pod sentences-sentece-svc-test
 ```
