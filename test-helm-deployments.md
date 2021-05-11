@@ -7,14 +7,9 @@
 
 ## Introduction
 
-There are multiple aspects of a helm chart that one might want to test:
+This exercise will deal with two kinds of testing helm charts.
 
-- if the rendered Kubernetes yaml is correctly formatted and valid
-- whether values are injected correctly into the rendered yaml
-- when a chart is deployed, that the services started are working as expected.
-- and many more...
-
-This Exercise will deal with the two latter, verifying that the injected values are correct, and testing that deployments work as expected.
+Use helm to verify that the injected values in your chart are correct, and testing that deployments work as expected.
 
 Helm provides functionality for orchestrating tests, using the `helm test` command.
 
@@ -39,16 +34,16 @@ metadata:
 ```
 
 <details>
-<summary>:bulb: tip</summary>
->Test pod specs can be located anywhere in the in the `<chart>/templates` >directory, though it is convention to place tests in a separate directory >called `tests`, eg. `<chart>/templates/tests`.
+<summary>:bulb: tip on test pod placement</summary>
+
+> Test pod specs can be located anywhere in the in the `<chart>/templates` directory, though it is convention to place tests in a separate directory called `tests`, eg. `<chart>/templates/tests`.
+
 </details>
 
 [Further Reading](https://helm.sh/docs/topics/chart_tests/)
 
 <details>
-<summary>More Details</summary>
-
-##### Helm Test Template
+<summary>Detailed Helm test template</summary>
 
 Below is an example of a complete boilerplate test pod spec:
 
@@ -68,9 +63,9 @@ spec:
       command: ["example-command", "example-argument"]
 ```
 
->:bulb: Note that we set the `restartPolicy` to `Never`.
->If we do not specify a restart policy, Kubernetes will try to be helpful, and will keep restarting our test pods, which will eventually fail the test once it reaches it's timeout.
->Therefore make sure to specify the `restartPolicy`.
+> :bulb: Note that we set the `restartPolicy` to `Never`.
+> If we do not specify a restart policy, Kubernetes will try to be helpful, and will keep restarting our test pods, which will eventually fail the test once it reaches it's timeout.
+> Therefore make sure to specify the `restartPolicy`.
 
 You can use all of the functionality of normal pod specs when writing tests.
 
@@ -92,7 +87,7 @@ spec:
       command: ["curl", "-s", "sentence:8080"]
 ```
 
-##### command vs. args
+### command vs. args
 
 When writing helm tests, you are likely to want to override the origin `ENTRYPOINT` or `CMD` defined in the Dockerfile of the image used in the test.
 In kubernetes this is done, slightly unintuitively, by using the `command` key of the container spec to define the `ENTRYPOINT`, and the `args` key to define the `CMD` of the container.
@@ -120,7 +115,7 @@ You can of course also use `args` by itself without modifying the `command`.
 
 [Further Reading](https://kubernetes.io/docs/tasks/inject-data-application/define-command-argument-container/)
 
-##### Helm Hooks / Automatically Removing Test Pods
+### Helm Hooks / Automatically Removing Test Pods
 
 You can use helm hooks in your test pod specs to do useful things.
 An example could be to delete pods after they have completed successfully.
@@ -144,16 +139,15 @@ metadata:
 > Note: With the current version of helm, v3.5.4, when using this hook, pods are deleted immediately, which means that the `helm test --logs <release>` will not print the logs, as the pods are deleted too early.
 > This is a [known issue](https://github.com/helm/helm/issues/9098) and will hopefully soon be fixed.
 
-
 [Further Reading](https://helm.sh/docs/topics/charts_hooks/)
 
 <details>
 <summary>:bulb: (Don't Put) Multiple Test-Containers in the same Pod</summary>
 
->Best practice when writing helm tests is to have each test container in it's own pod, but you can technically add as many containers to your test pods as you want.
->Having multiple containers in the same pod, will mean that the pod will only succeed if all of the containers exit successfully, and the pod will fail if just one of the containers exit unsuccessfully.
->This can be a useful pattern in certain cases, but you should know that if do so, the `helm test --logs` command will not work, as helm will not know which of the containers in the pod to get logs from, and it will be up to you to gather the logs some other way.
->Therefore best practice is to put each test into it's own pod, such that all test logs can be viewed easily.
+> Best practice when writing helm tests is to have each test container in it's own pod, but you can technically add as many containers to your test pods as you want.
+> Having multiple containers in the same pod, will mean that the pod will only succeed if all of the containers exit successfully, and the pod will fail if just one of the containers exit unsuccessfully.
+> This can be a useful pattern in certain cases, but you should know that if do so, the `helm test --logs` command will not work, as helm will not know which of the containers in the pod to get logs from, and it will be up to you to gather the logs some other way.
+> Therefore best practice is to put each test into it's own pod, such that all test logs can be viewed easily.
 
 </details>
 
@@ -174,7 +168,7 @@ This will run all test specified in the helm chart.
 <details>
 <summary>More Details</summary>
 
-##### Viewing Test Logs
+### Viewing Test Logs
 
 The stdout/stderr of the test pods can be conveniently viewed when running tests by using the `--logs` flag on the test command.
 
@@ -184,7 +178,7 @@ $ helm test --logs [RELEASE]
 
 The above command will run all of the tests and print the logs of each of the tests.
 
-##### Waiting for all Chart Resources to be Ready
+### Waiting for all Chart Resources to be Ready
 
 If you are testing a newly deployed helm release, you might end up with errors because the release have not been completely deployed yet.
 
@@ -214,7 +208,7 @@ Otherwise, the directory `helm-test/sentence-test-start` contains a clean starti
 
 If you get stuck on any of the exercises, or want to see how the finished chart should look, you can look at the finished chart `helm-test/sentence-test-done`.
 
-### Step by Step
+### Step by step instructions
 
 <details>
 <summary>More Details</summary>
@@ -250,15 +244,14 @@ spec:
 <details>
       <summary>:bulb: what does the podspec do?</summary>
 
-This helm test will run a pod with a single container, which will use the curl command to make a HTTP request to the sentence service.
-If the curl command receives a 200 response, then the container will exit with code 0, indicating a success.
-If the curl command does not receive a 200 response, the container will exit with a code that is greater than 0, indicating a failed test.
-
-Thus we can use this simple test to verify that after we have installed our chart, that our services are actually responding!
+> This helm test will run a pod with a single container, which will use the curl command to make a HTTP request to the sentence service.
+> If the curl command receives a 200 response, then the container will exit with code 0, indicating a success.
+> If the curl command does not receive a 200 response, the container will exit with a code that is greater than 0, indicating a failed test.
+> Thus we can use this simple test to verify that after we have installed our chart, that our services are actually responding!
 
 </details>
 
-#### Execute the sentence service test
+**Execute the sentence service test**
 
 We have to deploy the test to the Kubernetes cluster, so that Kubernetes knows what to do when we issue the test command.
 
@@ -320,7 +313,7 @@ Michael is 17 years
 $ kubectl delete pod sentences-sentence-svc-test
 ```
 
-#### Improve your test by using helm templating to make sure that values are injected correctly in the sentence service
+**Improve your test by using helm templating to make sure that values are injected correctly in the sentence service**
 
 - Change the following lines in your sentence service template `templates/sentences-svc.yaml`:
 
@@ -392,14 +385,14 @@ This change enables us to template the service name and port that the sentence s
 The cool thing is that we can use the same templating in our test specification.
 This is cool because we can use it to test that the service is actually using the values we have specified.
 
-#### * Execute the improved sentence service test
+**Execute the improved sentence service test**
 
 Upgrade the helm installation like you did before, and run the test the same way as before.
 
 <details>
       <summary>:bulb: How did I do that?</summary>
 
-You can always go back and search the text for the commands we wanted you to perform. But a more direct way could be to use bash build-in history of all commands issued. To try it out, type `history` and a list of all commands you have issued will appear. Try to see if you can remember which ones you need to use.
+> You can always go back and search the text for the commands we wanted you to perform. But a more direct way could be to use bash build-in history of all commands issued. To try it out, type `history` and a list of all commands you have issued will appear. Try to see if you can remember which ones you need to use.
 
 </details>
 
@@ -407,7 +400,7 @@ The test should succeed.
 
 - Clean up the test pod after the test has run with `kubectl delete pod sentences-sentence-svc-test`.
 
-#### Add a new test which uses regex to check that the returned body of the sentence service is correct
+**Add a new test which uses regex to check that the returned body of the sentence service is correct**
 
 Helm test pod specs can contain any container executing arbitrary commands.
 We will use regex to test that the body of the HTTP response follows an expected pattern, in order verify that the service is not only responding, but returns the correct result.
@@ -417,15 +410,15 @@ The program has already been packaged in a [docker image](https://hub.docker.com
 
 <details>
       <summary>More details</summary>
+
 The sentence application returns a response that looks like this:
 
-```
-Terry is 89 years
-```
+`Terry is 89 years`
 
 We can break that into a pattern with four sections: a capitalized name, the word 'is', a number and finally the word 'years'.
 
 We can create a regex statement to match this:
+
 ```regex
 ^[A-Z][a-z]+\ is\ \d+\ years$
 ```
@@ -462,7 +455,7 @@ spec:
 
 The above pod spec should look familiar, and the interesting to note is that it uses the image with the regex golang test, and takes the templated endpoint as it's argument.
 
-#### Execute both tests
+**Execute both tests**
 
 - Upgrade the helm chart to install the new test.
 
