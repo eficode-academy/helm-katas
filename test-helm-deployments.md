@@ -221,13 +221,15 @@ If you get stuck on any of the exercises, or want to see how the finished chart 
 
 **Add a helm test which checks that the sentence service is reachable**
 
-Start by adding a `tests` directory to the `templates` directory of your sentences helm chart:
+- add a `tests` directory to the `templates` directory of your sentences helm chart:
 
 ```sh
 mkdir sentence-app/templates/tests
 ```
 
-Create a file in the new tests directory called `sentence-svc-test.yaml`, and add the following podspec to the file:
+- Create a file in the new tests directory called `sentence-svc-test.yaml`
+
+- Add the following podspec to the file:
 
 ```yaml
 apiVersion: v1
@@ -246,7 +248,7 @@ spec:
 ```
 
 <details>
-      <summary>More details</summary>
+      <summary>:bulb: what does the podspec do?</summary>
 
 This helm test will run a pod with a single container, which will use the curl command to make a HTTP request to the sentence service.
 If the curl command receives a 200 response, then the container will exit with code 0, indicating a success.
@@ -256,14 +258,14 @@ Thus we can use this simple test to verify that after we have installed our char
 
 </details>
 
-#### * Execute the sentence service test
+#### Execute the sentence service test
 
-Now let's execute the new test that we have created.
-First we have to deploy the test to the Kubernetes cluster, so that Kubernetes knows what to do when we issue the test command, we can do that by upgrading the existing deployment.
-If the chart is not currently installed, you should install it instead of upgrading.
+We have to deploy the test to the Kubernetes cluster, so that Kubernetes knows what to do when we issue the test command.
+
+- Deploy (or upgrade) the existing deployment:
 
 ```sh
-$ helm upgrade sentences sentence-app
+$ helm upgrade --install sentences sentence-app
 Release "sentences" has been upgraded. Happy Helming!
 NAME: sentences
 LAST DEPLOYED: Wed Apr 28 08:42:36 2021
@@ -272,11 +274,13 @@ STATUS: deployed
 REVISION: 2
 ```
 
-Verify that all resources are correctly deployed with `kubectl get`.
+- Verify that all resources are correctly deployed with `kubectl get pods`.
 
-It is important that all pods are in the `ready` state, since otherwise we might get a false negative when we run the test.
+> It is important that all pods are in the `ready` state, since otherwise we might get a false negative when we run the test.
 
-Now execute the test:
+- Execute the test: `helm test sentences`
+
+- Verify that your output is successfull like the below example:
 
 ```sh
 $ helm test sentences
@@ -291,9 +295,7 @@ Last Completed: Wed Apr 28 08:42:45 2021
 Phase:          Succeeded
 ```
 
-As we can see from the output, the test executed successfully.
-
-We can inspect the test pod:
+- Use `kubectl` to list the pods, notice the test pod:
 
 ```sh
 $ kubectl get pods
@@ -303,22 +305,24 @@ sentence-age-7c948b5d88-vrmbp    1/1     Running     0          3m27s
 sentence-name-5687d74d64-mmhzs   1/1     Running     0          3m27s
 sentences-668bd45d9-t5gn4        1/1     Running     0          3m27s
 sentences-sentence-svc-test      0/1     Completed   0          2m58s
+```
 
+- Use `kubectl logs` to see the output of the test pod:
+
+```sh
 $ kubectl logs sentences-sentence-svc-test
 Michael is 17 years
 ```
 
-Clean up the test pod:
+- Clean up the test pod:
 
 ```sh
-$ kubectl delete pod sentences-sentece-svc-test
+$ kubectl delete pod sentences-sentence-svc-test
 ```
 
-#### * Improve your test by using helm templating to check that values are injected correctly in the sentence service
+#### Improve your test by using helm templating to make sure that values are injected correctly in the sentence service
 
-Now let's test the templating functionality of helm.
-
-Change the following lines in your sentence service template `templates/sentences-svc.yaml`:
+- Change the following lines in your sentence service template `templates/sentences-svc.yaml`:
 
 From:
 ```yaml
@@ -332,7 +336,9 @@ spec:
       ...
   ...
 ```
+
 To:
+
 ```yaml
 ...
 metadata:
@@ -345,8 +351,7 @@ spec:
   ...
 ```
 
-
-Next we change the test to use the same service name and port:
+- Change the test to use the same service name and port:
 
 Change `templates/tests/sentence-svc-test.yaml` from:
 ```yaml
@@ -359,6 +364,7 @@ spec:
 ```
 
 To:
+
 ```yaml
 ...
 spec:
@@ -368,8 +374,11 @@ spec:
       command: ["curl", "-s", "{{ .Values.sentences.service.name }}:{{ .Values.sentences.service.port }}"]
 ```
 
+> :bulb: now both places refers to the same value, meaning that both service and test will change when you change the value.
+
 Next we add the service name and port values to the `values.yaml`.
 Edit `sentence-app/values.yaml`, and add the `name: sentence` and `port: 9090` values under the sentence service:
+
 ```yaml
 sentences:
   ...
@@ -387,40 +396,55 @@ This is cool because we can use it to test that the service is actually using th
 
 Upgrade the helm installation like you did before, and run the test the same way as before.
 
+<details>
+      <summary>:bulb: How did I do that?</summary>
+
+You can always go back and search the text for the commands we wanted you to perform. But a more direct way could be to use bash build-in history of all commands issued. To try it out, type `history` and a list of all commands you have issued will appear. Try to see if you can remember which ones you need to use.
+
+</details>
+
 The test should succeed.
 
-Remember to clean up the test pod after the test has run.
+- Clean up the test pod after the test has run with `kubectl delete pod sentences-sentence-svc-test`.
 
-#### * Add a new test which uses regex to check that the returned body of the sentence service is correct
+#### Add a new test which uses regex to check that the returned body of the sentence service is correct
 
 Helm test pod specs can contain any container executing arbitrary commands.
-Let's try a more elaborate test.
-We will use regex to test that the body of the HTTP response follows an exepcted pattern, in order verify that the service is not only responding, but returns the correct result.
+We will use regex to test that the body of the HTTP response follows an expected pattern, in order verify that the service is not only responding, but returns the correct result.
 
+We have prepared a small golang program that will query the endpoint and verify the regex.
+The program has already been packaged in a [docker image](https://hub.docker.com/r/releasepraqma/sentence-regex-test) so that we can use it a test spec.
+
+<details>
+      <summary>More details</summary>
 The sentence application returns a response that looks like this:
+
 ```
 Terry is 89 years
 ```
+
 We can break that into a pattern with four sections: a capitalized name, the word 'is', a number and finally the word 'years'.
 
 We can create a regex statement to match this:
 ```regex
 ^[A-Z][a-z]+\ is\ \d+\ years$
 ```
+
 If you are not sure how regex works, then don't worry, the important part is that this statement will verify that a response from the service follows the pattern outlined above.
 
-We could verify the regex using shell commands, but that can get messy and hard to maintain, so let's use programming language to write our test in.
+We could verify the regex using shell commands, but that can get messy and hard to maintain, so let's use a programming language to write our test in.
 
-We have prepared a small golang program that will query the endpoint and very the regex.
 The golang code is located in `helm-test/sentence-regex-test/sentence_regex.go`, but the implementation is not important for the purpose of this exercise.
 The program will return a exit code 0 if the regex matches, and 1 if it does not.
-The program has already been packaged in a [docker image](https://hub.docker.com/r/releasepraqma/sentence-regex-test) so that we can use it a test spec.
+
+</details>
 
 We add a new test spec:
 
-Create a new file: `sentence-app/templates/tests/sentence-regex-test.yaml`
+- Create a new file: `sentence-app/templates/tests/sentence-regex-test.yaml`
 
-And add the code:
+- Add the code:
+
 ```yaml
 apiVersion: v1
 kind: Pod
@@ -438,12 +462,12 @@ spec:
 
 The above pod spec should look familiar, and the interesting to note is that it uses the image with the regex golang test, and takes the templated endpoint as it's argument.
 
+#### Execute both tests
 
-#### * Execute both tests
+- Upgrade the helm chart to install the new test.
 
-Now upgrade the helm chart to install the new test.
+- Execute the test command.
 
-Execute the test command.
 This time helm will execute both of our tests sequentially:
 
 ```sh
@@ -461,11 +485,23 @@ TEST SUITE:     sentences-sentence-svc-test
 Last Started:   Wed Apr 28 09:31:13 2021
 Last Completed: Wed Apr 28 09:31:14 2021
 Phase:          Succeeded
+```
 
+- Verify the logs from the regex test pod:
+
+```sh
 $ kubectl logs sentences-sentence-regex-test
 2021/04/28 07:31:13 response: ' Michael is 13 years ' is valid.
 ```
 
-You can add as many tests as you need to your helm chart, and the `test` command will execute all of them.
+> :bulb: You can add as many tests as you need to your helm chart, and the `test` command will execute all of them.
 
 </details>
+
+### Clean up
+
+To clean up the release together with the test pods:
+
+- `helm uninstall sentences`
+- `kubectl delete pod sentences-sentence-regex-test`
+- `kubectl delete pod sentences-sentence-svc-test`
