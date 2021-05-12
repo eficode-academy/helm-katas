@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "{{ .Release.Name }}-sentence-svc-test"
+  annotations:
+    # this annotation is what makes this pod spec a helm test!
+    "helm.sh/hook": test
+spec:
+  restartPolicy: Never
+  containers:
+    - name: "{{ .Release.Name }}-sentence-svc-test"
+      image: praqma/network-multitool:minimal
+      command: ["curl", "-s", "{{ .Values.sentences.service.name }}:{{ .Values.sentences.service.port }}"]
