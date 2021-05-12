@@ -32,6 +32,8 @@ that make up the sentences application.
 <details>
       <summary>More details</summary>
 
+Open a terminal in the root of the git repository (helm-katas) and use `docker-compose up` to deploy the stack:
+
 - `docker-compose -f sentences-app/deploy/docker-compose.yaml up -d`
 
 Use the following command to request sentences
@@ -71,7 +73,7 @@ with a single POD instance each.
 
 - `kubectl get pods`
 
-> :builb: The front-end microservice for the
+> :bulb: The front-end microservice for the
 > sentences application is exposed with a
 > Kubernetes service of type `NodePort`.
 

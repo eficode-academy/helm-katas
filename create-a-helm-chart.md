@@ -48,16 +48,14 @@ sentences-svc.yaml
 
 **Create a skeleton helm chart**
 
-In the `kubernetes-appdev-katas`-folder. Use
-`helm create` to create a simple Helm chart:
+First we create a new directory for our helm chart, and then use the `helm create` command to create the chart skeleton:
 
 - `mkdir helm-chart`
 - `cd helm-chart`
 - `helm create sentence-app`
 
-Since we will use the sentence application YAML as
-templates for the chart we delete the ones created
-by `helm create`:
+The `helm create` command we just issued created a lot of files that you might want to use when creating a new helm chart.
+We do not need all of those files for the chart we will be creating, therefore we will remove the files we do not need:
 
 - `rm -rf sentence-app/templates/*`
 - `echo "" > sentence-app/values.yaml`
@@ -89,7 +87,7 @@ validation of it:
 
 - `helm lint sentence-app/`
 
-Running this command produce the following output:
+Running this command produces the following output:
 
 ```shell
 ==> Linting sentence-app/
@@ -108,7 +106,7 @@ run the following:
 
 - `helm install sentences sentence-app/`
 
-Running this command produce the following output:
+Running this command produces the following output:
 
 ```shell
 NAME: sentences
