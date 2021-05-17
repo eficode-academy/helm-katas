@@ -1,317 +1,98 @@
-# Helm Chart with Parameters
+# Helm Chart with Parameters and Handling Whitespace
 
-## Learning goal
+## Learning Goals
 
-- Learning how to use parameters in Helm such as
-  - Configurable Kubernetes resource naming (using
-    Helm built-in values)
-  - Configurable number of POD replicas in
-    deployments (using single-value parameters
-    with defaults)
-  - Configurable resource settings (using
-    list-type value parameters)
-  - Optional definitions (using if/else
-    constructs)
+- Create helm chart with parameterized values
+- Modify Existing template files to use injected values
+- Create `values.yaml` file to setup defaults for injected values
+- Render Helm chart with different values
+- Manage whitespace around injected values
 
 ## Introduction
 
-This exercise will demonstrate adding parameters
-to a Helm chart to allow customization of the
-installed application.
+So far the helm chart we have created only has static values, meaning that every time we install it we get the exact same result.
 
-This exercise extends the Helm chart created in
-the [create-a-helm-chart](create-a-helm-chart.md)
-exercise.
+In order to make the chart customizable, so that we can modify the chart for a specific use-case when we install it, we can use parameters.
 
-when we initially created the Helm chart we did it
-with an empty values.yaml file. Now we want to
-inject parameters into the chart.
+Helm uses `go templates` under the hood, which enables powerful text templating of the kubernetes yaml files in the chart.
 
-For that we need to update the chart template
-files such that values are inserted at the
-appropriate places. We do that using the `{{` and
-`}}` template language constructions.
+<!-- TODO add link to doc -->
 
-<details>
-      <summary>More information</summary>
-Helm templateting can both help us with inline
-replacement of values, and whole sections to be
-inserted into our Yaml files.
+Since we are templating `yaml` files we have to be careful with getting the indentation of parameterized values right, so therefore the templating includes functionality for handling whitespace.
 
-Kubernetes allows us to define which port to use
-for services of type NodePort. In the exercise
-below we will customize the Kubernetes YAMl for
-this scenario.
+### Helm Template Files
 
-</details>
+Parameters can be injected into template files using the `go template` syntax.
+Golang templates uses `actions` whenever you want to specify a value that can be parametized.
+`actions` are written using a double curly brace syntax: `{{ }}` so that everything within the two curly braces is interpreted by the parser, and not treated as actual text.
+
+A trivial example of an action that returns the text "kubernetes" would look like this:
+```
+{{ "kubernetes" }}
+```
+
+That's not very useful though, so instead we will reference the `.Values` object which contains all of the values that we make available to helm to use:
+
+```
+{{ .Values.orchestration-tool }}
+```
+Where we imagine that the value of `orchestration-tool=kubernetes`, which would result in the string "kubernetes" being injected when we render the yaml template.
+
+If we, for example, wanted to template the name of the resources of our sentence application:
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  ...
+  name: sentences
+...
+```
+Then we would change the value of the `name` key to an action that inserts the name of the release in front of the name of the deployment:
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  ...
+  name: {{ .Release.Name }}-sentence
+...
+```
+
+
+### Values
+
+There are two main ways for specifying the values that Helm should use when rendering our templates:
+- Using the imperative `--set key=value` option on `helm install` and `helm upgrade` commands.- Or using declarative values file, which are yaml files that specify each value that can be parametized.
+
+The imperative approach is good for experiments or one off commands, while the declarative approach is good for repeatable installations and upgrades.
+
+
+
+
 
 ## Exercise
 
 ### Overview
 
-- Add content to `values.yaml` for replicas,
-  image, and service
-- Add parameter references to the chart
-- Add conditional rendering of `nodePort` type
-- Add a `values-resources.yaml` values files for
-  your customizations of the helm chart.
+- Modify sentences deployment
+- Render the sentences deployment with different cli arguments
+- Create values file
+- Render the sentences deployment with the values file
+- Modify sentences service and update values file
+- Render both templates with the values file
+- Modify the sentences deployment to trim whitespace
 
-### Step-by-step
+You can use your chart from the previous exercise, or if you want a clean starting point, you can use the files in `helm-katas/helm-chart-with-parameters/chart-with-parameters-start`.
+If you get stuck, or want to see how the chart looks after completing the exercise, look at the chart in `helm-katas/helm-chart-with-paramters/chart-with-parameters-done`.
 
-<details>
-      <summary>More information</summary>
+### Step-by-Step
 
-**Add content to `values.yaml`**
+<!-- <details> -->
+      <!-- <summary>Steps:</summary> -->
+<!-- </details> -->
 
-- Replace the `values.yaml` with the following
-  content:
-
-```yaml
-## sentence configured the main sentences micro-service
-sentences:
-  ## replicas is the number of POD replicas
-  replicas: 1
-  ## image contains the POD container image parameters
-  image:
-    repository: releasepraqma/sentence
-    tag: latest
-  ## resource requests and limits
-  resources: {}
-  service:
-    ## type is the type of the service fronting the sentence application
-    type: NodePort
-    ## nodePort is the actual port used for NodePort-type services
-    #nodePort:
-```
-
-<details>
-      <summary>:bulb: This `values.yaml` file shows:</summary>
-
-> - Using double `##` for documentation comments
->   and single `#` for commented-out fields. This
->   is not an official Helm standard but a very
->   common approach.
-> - Image name and tag are separately
->   configurable. This is a common pattern because
->   the tag typically is configured independently
->   from the image name.
-> - POD resource settings are not defaulted in
->   `values.yaml`. We cannot know the proper
->   settings and instead we provide an empty map
->   and allows users to set appropriate resource
->   requests.
-> - The `nodePort` parameter (which is only
->   relevant in case the Kubernetes service is of
->   type `NodePort`) has no default. Again, we
->   cannot know the proper default but instead
->   indicate in the `values.yaml` file that there
->   is a parameter that can be configured. Another
->   typically used alternative for string-type
->   values with no good default is to leave them
->   as empty strings.
-
-</details>
-
-<details>
-      <summary>:bulb: helm best practice</summary>
-> :bulb: Note that the Helm best practices
-> suggests using a flat values file vs. a nested
-> one as shown above. Real-world charts however,
-> very often use nested values and this is
-> probably the defacto standard. For more info
-> look
-> [here](https://helm.sh/docs/chart_best_practices/values/#flat-or-nested-values)
-</details>
-
-**Adding Parameters to the Chart**
-
-In the template file
-`sentence-app/templates/sentences-deployment.yaml`
-file:
-
-- locate the first `spec` of the deployment
-  manifest, i.e. the part that starts with:
-
-```yaml
-spec:
-  selector:
-    matchLabels:
-```
-
-- add a line with a `replicas` specification as
-  follows:
-
-```
-spec:
-  replicas: {{ .Values.sentences.replicas }}
-  selector:
-    matchLabels:
-```
-
-- Verify the rendering as follows:
-  `helm template sentence-app/ --show-only templates/sentences-deployment.yaml`
-
-> :bulb: Since `values.yaml` have a default
-> replica count of 1 that is what we see in the
-> rendered `sentences-deployment.yaml` template.
-
-- Try explicitly override the value in the helm
-  invocation as follows:
-
-- `helm template sentence-app/ --show-only templates/sentences-deployment.yaml --set sentences.replicas=3`
-
-- In the same yaml file, change the container
-  image specification:
-
-```
-      - image: {{ .Values.sentences.image.repository }}:{{ .Values.sentences.image.tag }}
-```
-
-- Change the Deployment name as follows:
-
-```
-  name: {{ .Release.Name }}-sentences
-```
-
-> :bulb: The resource section is slightly
-> different since this is not a single value but
-> instead a full YAML map. Also, we do not know
-> whether the user will specify limits or requests
-> for either CPU or memory since all this is
-> related to the actual usage.
->
-> Instead we simply insert the full YAML as given
-> by the user. To do this we use a Helm function
-> and pipeline as follows.
-
-- Change the hard-coded resource settings from:
-
-```
-        resources:
-          requests:
-            cpu: 0.25
-          limits:
-            cpu: 0.25
-```
-
-to:
-
-```yaml
-        resources:
-{{ toYaml .Values.sentences.resources | indent 10 }}
-```
-
-- Validate the resource setting:
-  `helm template sentence-app/ --set sentences.resources.requests.cpu=0.25 --show-only templates/sentences-deployment.yaml`
-
-> :bulb: Pay particularly attention to indentation
-> on the rendered YAML.
-
-**Adding Conditional Rendering of Template**
-
-In the template file
-`sentence-app/templates/sentences-svc.yaml` file,
-locate the specification of the service type:
-
-```
-  type: NodePort
-```
-
-- Change this line and add nodeport specification
-  as follows:
-
-```
-  type: {{ .Values.sentences.service.type }}
-```
-
-- Locate the specification of the port mapping:
-
-```
-  ports:
-  - port: 8080
-    protocol: TCP
-    targetPort: 8080
-```
-
-- Add the conditional nodeport specification as
-  follows:
-
-```
-  ports:
-  - port: 8080
-    protocol: TCP
-    targetPort: 8080
-    {{ if and (eq .Values.sentences.service.type "NodePort") .Values.sentences.service.nodePort -}}
-    nodePort: {{ .Values.sentences.service.nodePort }}
-    {{- end }}
-```
-
-Note the post-fix used by Helm notation in the
-above specification.
-
-- Test that helm will not write a `nodePort:`
-  section under ports, if you do not specify one:
-  `helm template sentence-app/ --show-only templates/sentences-svc.yaml --set sentences.service.type=NodePort`
-
-- Test that helm _will_ write it if you do by
-  setting notePort to 30000:
-  `helm template sentence-app/ --show-only templates/sentences-svc.yaml --set sentences.service.nodePort=30000,sentences.service.type=NodePort`
-
-- Test that helm will not write a `nodePort`
-  section, if the type is not NodePort:
-  `helm template sentence-app/ --show-only templates/sentences-svc.yaml --set sentences.service.nodePort=30000,sentences.service.type=ClusterIP`
-
-**Values Files**
-
-When multiple variables needs to be set, its more
-convenient to have them collected in files. Try
-this by creating a file called
-`values-resources.yaml` with the following
-content:
-
-```yaml
-sentences:
-  resources:
-    requests:
-      cpu: 0.25
-    limits:
-      cpu: 0.25
-```
-
-- Test template rendering with:
-
-```shell
-$ helm template sentence-app/ --values values-resources.yaml --show-only templates/sentences-deployment.yaml
-```
-
-- Validate the chart `helm lint sentence-app/`
-
-- Install the sentences application using the new
-  chart `helm install sentences sentence-app/`
-
-This will install the chart with the default
-values.
-
-- Use `kubectl get pods` to see the running pods
-
-- Try upgrading the chart using an increased
-  replica count:
-  `helm upgrade sentences sentence-app/ --set sentences.replicas=3`
-
-- inspect the chart status and actual values:
-
-```shell
-$ helm list
-$ helm get all sentences
-$ helm get values sentences
-```
-
-</details>
+TODO
 
 ## Cleanup
 
-Delete the application installed with Helm:
-
-```shell
-$ helm delete sentences
-```
+TODO
