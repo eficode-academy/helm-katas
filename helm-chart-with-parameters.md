@@ -15,8 +15,9 @@ In order to make the chart customizable, so that we can modify the chart for a s
 
 Helm uses `go templates` under the hood, which enables powerful text templating of the kubernetes yaml files in the chart.
 
-<!-- TODO add link to doc -->
+[Helm docs on values](https://helm.sh/docs/topics/charts/#templates-and-values)
 
+[Golang docs on templates](https://pkg.go.dev/text/template?utm_source=godoc)
 
 ### Parameterizing Helm Template Files
 
@@ -107,23 +108,22 @@ The imperative approach is good for experiments or one off commands, while the d
 
 ### Overview
 
-- Modify sentences deployment and render templates with cli arguments
+- Modify Sentences Deployment
+- Render Sentences Deployment Template from Command Line
+- Parameterize the Container Image
 - Create values file
-- Render the sentences deployment with the values file
-- Modify sentences service and update values file
-- Render both templates with the values file
-- Modify the sentences deployment to trim whitespace
+- Render the Template with the Values File
 
 You can use your chart from the previous exercise, or if you want a clean starting point, you can use the files in `helm-katas/helm-chart-with-parameters/chart-with-parameters-start`.
 If you get stuck, or want to see how the chart looks after completing the exercise, look at the chart in `helm-katas/helm-chart-with-paramters/chart-with-parameters-done`.
 
 ### Step-by-Step
 
-<!-- <details> -->
-      <!-- <summary>Steps:</summary> -->
+<details>
+<summary>Steps:</summary>
 
 
-**Modify sentences deployment and render templates with cli arguments**
+**Modify Sentences Deployment**
 
 In this exercise we will add parameters to the sentences deployment, the "frontend" so to speak of the sentences application.
 The sentences deployment should be in your helm chart under the templates directory: `sentence-app/templates/sentences-deployment.yaml`.
@@ -147,6 +147,8 @@ spec:
 
 > :bulb: we prefix the `replicas` key with the name of deployment, in this case the `sentences` deployment, so that if we want to have a replicas value for each of the different deployment we acccess these with different prefixes.
 
+**Render Sentences Deployment Template from Command Line**
+
 Now we can try to render the yaml with a specified number of replicas:
 
 ```sh
@@ -167,6 +169,8 @@ spec:
 ```
 
 As we can see the deployment would now create 2 replicas, you can try a few different number of replicas if you want.
+
+**Parameterize the Container Image**
 
 Next let's also parameterize the container repository and the tag, change:
 
@@ -249,6 +253,8 @@ sentences:
 > :bulb: The structure of the yaml file defines the scope of the values.
 > So to reference the replicas key, we would prefix it with the parent key, sentences: `sentence.replicas` and in the full helm object notation: `.Values.sentence.replicas`, just like we did above.
 
+**Render the Template with the Values File**
+
 Now let's try to render the sentences deployment again using the values from `values.yaml`:
 
 ```sh
@@ -281,15 +287,15 @@ Since the values are kept in a file, the values file can be versioned with git o
 
 
 
-<!-- </details> -->
+</details>
 
 
 ### Extra Exercise
 
 If you have more time, or want to practice using values a bit more, then here are a couple of extra exercises:
 
-<!-- <details> -->
-<!-- <summary>Extra steps:</summary> -->
+<details>
+<summary>Extra steps:</summary>
 
 **Parameterize the two other Deployments**
 
@@ -484,7 +490,7 @@ spec:
         ...
 ```
 
-<!-- </details> -->
+</details>
 
 ## Cleanup
 
