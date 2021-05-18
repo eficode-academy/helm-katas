@@ -21,7 +21,7 @@ Helm uses `go templates` under the hood, which enables powerful text templating 
 
 ### Parameterizing Helm Template Files
 
-Values are parameterized in helm by replacing the value you want to parameterize with `{{ .Values.<value-name> }}`.
+Values are parameterized in helm by replacing the value you want to parameterize with `{{ .Values.<valueName> }}`.
 
 For example, if we have a deployment that species the number of replicas:
 ```yaml
@@ -68,14 +68,16 @@ A trivial example of an action that returns the text "kubernetes" would look lik
 That's not very useful though, so instead we will reference the `.Values` object which contains all of the values that we make available to helm to use:
 
 ```
-{{ .Values.orchestration-tool }}
+{{ .Values.orchestrationTool }}
 ```
 
-Where we imagine that the value of `orchestration-tool=kubernetes`, which would result in the string "kubernetes" being injected when we render the yaml template.
+Where we imagine that the value of `orchestrationTool=kubernetes`, which would result in the string "kubernetes" being injected when we render the yaml template.
+
+> :bulb: When referencing the `.Values` object in Helm, you cannot use dashes (`-`), instead the convention is to use camel case.
 
 ### Helm Built-in Objects
 
-Helm has a number of built-in objects that you might want to use values from, such as the `.Relase` object, which provided metadata about the current release of the chart.
+Helm has a number of [built-in objects](https://helm.sh/docs/chart_template_guide/builtin_objects/) that you might want to use values from, such as the `.Release` object, which provided metadata about the current release of the chart.
 
 For example we might want to include the name of our release in the names of the resources that are deployed, such that we can differentiate which release they belong to.
 
@@ -94,17 +96,18 @@ If the name of this release is `mySentences`, then the resulting name of the dep
 
 </details>
 
-
 ### Values
 
 There are two main ways for specifying the values that Helm should use when rendering our templates:
+
 - Using the imperative `--set key=value` option on helm commands.
-- Or using declarative `values.yaml` values file, which are yaml files that specify each value that can be parameterized.
+- Using declarative `values.yaml` values file, which specify each value that can be parameterized.
 
 The imperative approach is good for experiments or one off commands, while the declarative approach is good for repeatable installations and upgrades.
 
-
 ## Exercise
+
+In this exercise we will add parameters to the sentences deployment, the "frontend" so to speak of the sentences application.
 
 ### Overview
 
@@ -114,7 +117,7 @@ The imperative approach is good for experiments or one off commands, while the d
 - Create values file
 - Render the Template with the Values File
 
-You can use your chart from the previous exercise, or if you want a clean starting point, you can use the files in `helm-katas/helm-chart-with-parameters/chart-with-parameters-start`.
+You can use your chart from the previous exercise [create a helm chart](create-a-helm-chart.md), or if you want a clean starting point, you can use the files in `helm-katas/helm-chart-with-parameters/chart-with-parameters-start`.
 If you get stuck, or want to see how the chart looks after completing the exercise, look at the chart in `helm-katas/helm-chart-with-paramters/chart-with-parameters-done`.
 
 ### Step-by-Step
@@ -122,18 +125,18 @@ If you get stuck, or want to see how the chart looks after completing the exerci
 <details>
 <summary>Steps:</summary>
 
-
 **Modify Sentences Deployment**
 
-In this exercise we will add parameters to the sentences deployment, the "frontend" so to speak of the sentences application.
 The sentences deployment should be in your helm chart under the templates directory: `sentence-app/templates/sentences-deployment.yaml`.
 
-Go ahead and open this file in your text editor.
+- Open this file in your text editor.
 
 There are a lot of arguments in this deployment that we might want to parameterize, like the number of replicas, the container repository and tag or the resources allocation.
 
-Let start by parameterizing the replicas, this key is currently not in the deployment specification, so we have to add it.
-add `replicas: {{ .Values.sentences.sentences.replicas }}` to the yaml:
+Let start by parameterizing the replicas.
+This key is currently not in the deployment specification, so we have to add it.
+
+- add `replicas: {{ .Values.sentences.sentences.replicas }}` to the yaml:
 
 ```yaml
 apiVersion: apps/v1
@@ -145,11 +148,11 @@ spec:
   ...
 ```
 
-> :bulb: we prefix the `replicas` key with the name of deployment, in this case the `sentences` deployment, so that if we want to have a replicas value for each of the different deployment we acccess these with different prefixes.
+> :bulb: we prefix the `replicas` key with the name of deployment, in this case the `sentences` deployment, so that if we want to have a replicas value for each of the different deployment we access these with different prefixes.
 
 **Render Sentences Deployment Template from Command Line**
 
-Now we can try to render the yaml with a specified number of replicas:
+- Try to render the yaml with a specified number of replicas:
 
 ```sh
 $ helm template sentence-app/ --set sentences.replicas=2 --show-only templates/sentences-deployment.yaml
@@ -172,7 +175,9 @@ As we can see the deployment would now create 2 replicas, you can try a few diff
 
 **Parameterize the Container Image**
 
-Next let's also parameterize the container repository and the tag, change:
+Next let's also parameterize the container repository and the tag.
+
+- change:
 
 ```yaml
 apiVersion: apps/v1
@@ -204,7 +209,7 @@ spec:
       - image: {{ .Values.sentences.repository }}:{{ .Values.sentences.tag }}
 ```
 
-Now let's try to render the template file:
+- Render the template file, and observe the new values getting reflected:
 
 ```sh
 $ helm template sentence-app/ --set sentences.replicas=2 --set sentences.repository=myiamge --set sentences.tag=mytag --show-only templates/sentences-deployment.yaml
@@ -227,7 +232,7 @@ spec:
         ...
 ```
 
-You can try a few different values for the repostory and tag if you want.
+You can try a few different values for the repository and tag if you want.
 
 **Create values file**
 
@@ -235,14 +240,15 @@ In the previous step we parameterized some of the values of the sentences deploy
 As you can imagine when you have a lot values to parameterize, specifying all of them from the command line does not scale well.
 Instead we will create a file `values.yaml` which will contain all of our values we want to use.
 
-Create a file named `values.yaml` in the root of your repository:
+- Create a file named `values.yaml` in the root of your repository:
+
 ```sh
 $ touch sentence-app/values.yaml
 ```
 
 > :bulb: You can create the file any way you want to, just make sure that it is in the right location!
 
-And open it in your editor and add:
+- Open it in your editor and add:
 
 ```yaml
 sentences:
@@ -250,12 +256,13 @@ sentences:
   repository: releasepraqma/sentences
   tag: latest
 ```
+
 > :bulb: The structure of the yaml file defines the scope of the values.
 > So to reference the replicas key, we would prefix it with the parent key, sentences: `sentence.replicas` and in the full helm object notation: `.Values.sentence.replicas`, just like we did above.
 
 **Render the Template with the Values File**
 
-Now let's try to render the sentences deployment again using the values from `values.yaml`:
+- Render the sentences deployment again using the values from `values.yaml`:
 
 ```sh
 $ helm template sentence-app --show-only templates/sentences-deployment.yaml
@@ -276,21 +283,17 @@ spec:
         ...
 ```
 
-Using a `values.yaml` file scales much better for larger charts.
-The values file also allows you to provide sensible defaults for all of the parameters that your chart has, as well as help the user to understand what values they should provide for each parameter.
-Since the values are kept in a file, the values file can be versioned with git or other tools, and can be used in for example a GitOps workflow.
+> Note: Using a `values.yaml` file scales much better for larger charts.
+>The values file also allows you to provide sensible defaults for all of the parameters that your chart has, as well as help the user to understand what values they should provide for each parameter.
+>Since the values are kept in a file, the values file can be versioned with git or other tools, and can be used in for example a GitOps workflow.
 
 > :bulb: It is convention to call values file `values.yaml`, though you can name it anything that you want.
 > Helm will automatically use the values file named `values.yaml` if it exists, and other value files can be used with the option `--values myvalues.yaml`.
 > If you use multiple values files, these will be merged by helm.
 
-
-
-
 </details>
 
-
-### Extra Exercise
+### Extra Exercise (optional)
 
 If you have more time, or want to practice using values a bit more, then here are a couple of extra exercises:
 
@@ -300,7 +303,9 @@ If you have more time, or want to practice using values a bit more, then here ar
 **Parameterize the two other Deployments**
 
 Now we will add the same parameters to the two other deployments in the sentence application.
-By making the same changes that you made to `sentence-app/templates/sentences-deployment.yaml` to the other deployments:
+
+We will make the same changes that you made to `sentence-app/templates/sentences-deployment.yaml` to the other deployments:
+
 - `sentence-app/templates/sentences-age-deployment.yaml`
 - `sentence-app/templates/sentences-name-deployment.yaml`
 
@@ -308,19 +313,17 @@ We need to do one thing differently though, and that is that we need to specify 
 
 In the previous steps we referenced the values of the `sentences` value map, now we will be creating two new maps, `sentecesAge` and `sentencesName`.
 
-> :bulb: When referencing the `.Values` object in Helm, you cannot use dashes (`-`), instead the convention is to use camel case.
-
 You must use the appropriate map when making your changes to the deployment template files.
 
 Instead of `{{ .Values.sentences.replicas }}` we would use `{{ .Values.sentencesAge.replicas }}` and `{{ .Values.sentencesName.replicas }}` respectively.
 
-Now make the changes for the `replicas`, `repository` and `tag` values to the files `sentences-age-deployment.yaml` and `sentences-name-deployment.yaml`.
+- Make the changes for the `replicas`, `repository` and `tag` values to the files `sentences-age-deployment.yaml` and `sentences-name-deployment.yaml`.
 
 **Add new parameters to values.yaml**
 
 In order to render our newly edited deployment templates we have to also provide values for them:
 
-Edit your `values.yaml` and add values for `sentencesAge` and `sentencesName`:
+- Edit your `values.yaml` and add values for `sentencesAge` and `sentencesName`:
 
 ```yaml
 sentences:
@@ -339,7 +342,7 @@ sentencesName:
   tag: latest
 ```
 
-Now let's try to render our to two modified deployment templates:
+- Render our to two modified deployment templates:
 
 ```sh
 $ helm template sentence-app --show-only templates/sentences-age-deployment.yaml --show-only templates/sentences-name-deployment.yaml
@@ -377,11 +380,12 @@ spec:
 
 When we have values that repeat themselves, we can cut down on redundancy by parameterizing those as well, for example the organization in our container repository `releasepraqma`.
 
-Instead of adding the organization name to each of our container repository values, we could instead use a Helm global values to set the organzation name, and then prefix that to each of our instances the container repository.
+Instead of adding the organization name to each of our image repository values, we could instead use a Helm global value to set the organization name, and then prefix that to each of our instances.
 
 > :bulb: Global values have some extended functionality when developing charts that include multiple sub charts, you can read more about it in the [documentation](https://helm.sh/docs/topics/charts/#global-values)
 
-Add the following section to your `values.yaml`:
+- Add the following section to your `values.yaml`:
+
 ```yaml
 global:
   organization: releasepraqma
@@ -389,7 +393,7 @@ global:
 
 > :bulb: Global values can be referenced from the values object: `.Values.global.organization` for example.
 
-And edit each of the repository tags, such that they only include the unique name of each micro service:
+- Edit each of the repository tags, such that they only include the unique name of each micro service:
 
 ```yaml
 global:
@@ -411,10 +415,11 @@ sentencesName:
   tag: latest
 ```
 
-Now edit each of your deployment template files to use the global organization name:
+- Edit each of your deployment template files to use the global organization name:
 
 From:
-```
+
+```yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -429,7 +434,8 @@ spec:
 ```
 
 To:
-```
+
+```yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -443,9 +449,9 @@ spec:
       - image: {{ .Values.global.organization }}/{{ .Values.sentences.repository }}:{{ .Values.sentences.tag }}
 ```
 
-Now make the same change for the `age` and `name` deployments.
+- Make the same change for the `age` and `name` deployments.
 
-Render the templates and verify that the repository names are correctly templated:
+- Render the templates and verify that the repository names are correctly templated:
 
 ```sh
 $ helm template sentence-app --show-only templates/sentences-deployment.yaml --show-only templates/sentences-age-deployment.yaml --show-only templates/sentences-name-deployment.yaml
