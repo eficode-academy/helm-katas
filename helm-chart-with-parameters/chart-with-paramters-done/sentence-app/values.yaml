@@ -1,0 +1,17 @@
+global:
+  organization: releasepraqma
+
+sentences:
+  replicas: 2
+  repository: sentences
+  tag: latest
+
+sentencesAge:
+  replicas: 1
+  repository: age
+  tag: latest
+
+sentencesName:
+  replicas: 1
+  repository: name
+  tag: latest
