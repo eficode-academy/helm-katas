@@ -127,8 +127,8 @@ If you get stuck, or you want to see how the final chart looks, there is a solve
 
 ### Step-by-Step
 
-<!-- <details> -->
-<!-- <summary>Steps:</summary> -->
+<details>
+<summary>Steps:</summary>
 
 **Make CPU and Memory Limits Configurable for the Sentences Deployment**
 
@@ -508,4 +508,4 @@ spec:
 
 And we can see that the memory specifications are injected correctly!
 
-<!-- </details> -->
+</details>
