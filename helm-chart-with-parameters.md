@@ -117,8 +117,8 @@ In this exercise we will add parameters to the sentences deployment, the "fronte
 - Create values file
 - Render the Template with the Values File
 
-You can use your chart from the previous exercise [create a helm chart](create-a-helm-chart.md), or if you want a clean starting point, you can use the files in `helm-katas/helm-chart-with-parameters/chart-with-parameters-start`.
-If you get stuck, or want to see how the chart looks after completing the exercise, look at the chart in `helm-katas/helm-chart-with-paramters/chart-with-parameters-done`.
+You can use your chart from the previous exercise [create a helm chart](create-a-helm-chart.md), or if you want a clean starting point, you can use the files in `helm-katas/helm-chart-with-parameters/start`.
+If you get stuck, or want to see how the chart looks after completing the exercise, look at the chart in `helm-katas/helm-chart-with-parameters/done`.
 
 ### Step-by-Step
 
