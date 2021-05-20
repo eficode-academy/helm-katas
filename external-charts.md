@@ -89,6 +89,8 @@ We will try alternating one of the dependencies before deploying again.
 
 
 
+**change the dependency version of mariaDB**
+**helm dependency update**
 **install the new one**
 
 </details>
