@@ -39,10 +39,10 @@ helm repo update
 
 We are going to have a look at the wordpress chart before applying it. 
 
-- Navigate to the `external-charts` folder with your terminal.
+- Navigate to the `external-charts` folder in the root of this repository in your terminal.
 - Pull down the chart from bitnami: `helm pull --untar bitnami/wordpress`
 
-Your folder should now look something like the following:
+Your folder should now look something like this:
 
 ```sh
 .
@@ -57,26 +57,29 @@ Your folder should now look something like the following:
     ├── values.schema.json
     └── values.yaml
 ```
+- Open `external-charts/wordpress/values.yaml` to see all the possible values that are configurable.
 
-- Open `external-charts/wordpress/values.yaml` to see all the possible values that is configurable.
-
-**inspect the `chart.yaml` and the `charts/` folder**
+**Inspect the `chart.yaml` and the `charts/` folder**
 
 - Look at the `external-charts/wordpress/Chart.yaml` file to see the three dependencies that wordpress depends on; MariaDB, Memcached, and Common.
 - Look in the `external-charts/wordpress/charts` folder to see the three dependencies also getting pulled down, each in their own folder.
 
-**Install the chart**
+**Update the values file**
 
 - Set your own username and password in our pre-made values file in `external-charts/values.yaml`
+
+**Install the chart**
+
+
 - Install the chart in your cluster: `helm install my-wordpress wordpress -f values.yaml`
 - Inspect that all pods comes online: `kubectl get pods,deployments`
 - Try to access the wordpress site with the new external loadbalancer ip: `kubectl get svc`
 
-> note: you might be redirected to an self-signed HTTPS site. It's perfectly fine, and simply because we do not have a trused cert authority assigned.
+> Note: You might be redirected to a HTTPS site with an untrusted certificate. It's perfectly fine in this exercise. It is because we do not use TLS certificates signed by a trusted certificate authority in the training environment. You should always use properly trusted certificates in production.
 
 - Try to log into wordpress backend by accessing the admin site on: `https://<LoadBalancerIP>/admin`
 
-**change the dependency version of memcached**
+**Change the dependency version of memcached**
 
 When pulling a chart down with dependencies, the dependency charts are getting pulled down as well.
 We will try alternating one of the dependencies before deploying again.
@@ -87,14 +90,15 @@ We will try alternating one of the dependencies before deploying again.
 
 - Try changing the version
 
-**helm dependency update**
+**Helm dependency update**
 
 
-**install the new one**
+
+**Install the new one**
 
 </details>
 
-### clean up
+### Clean up
 
 - `helm uninstall my-wordpress`
 - `kubectl delete pvc data-my-wordpress-mariadb-0`
