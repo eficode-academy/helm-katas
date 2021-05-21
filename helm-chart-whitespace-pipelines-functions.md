@@ -25,7 +25,9 @@ The actions delimiters `{{` and `}}` can be augmented with a dash `-`:
 
 Whitespace includes all `spaces`, `tabs` and `newlines`!
 
-An example:
+<details>
+<summary>An example:</summary>
+
 ```
 PRE
   {{- "mytext" -}}
@@ -38,7 +40,7 @@ PREmytextPOST
 ```
 
 Because all of the whitespace around the action will be consumed by the `{{-` and `-}}`, until non-whitespace characters are encountered.
-
+</details>
 
 There are also functions for managing whitespace, like adding a configurable amount of indentation with the `indent` function:
 
@@ -47,33 +49,45 @@ There are also functions for managing whitespace, like adding a configurable amo
 ```
 
 Would add 4 spaces in front of the injected value.
+
 Similarly `nindent` functions the same as `indent`, but also adds a newline before the line being indented.
 
-[Documentation](https://helm.sh/docs/chart_template_guide/control_structures/#controlling-whitespace)
-
-[indent and nindent documentation](https://helm.sh/docs/chart_template_guide/function_list/#indent)
+> :bulb: Documentation links:
+>
+>[Documentation for controlling whitespaces](https://helm.sh/docs/chart_template_guide/control_structures/#controlling-whitespace)
+>
+>[Indent and nindent documentation](https://helm.sh/docs/chart_template_guide/function_list/#indent)
 
 ### Helm Functions
 
 Helm has a number of `functions` available that enable more elaborate templating.
 
 Functions are used in actions and take at least one argument:
+
 ```
 {{ function argument1 argument2 }}
 ```
+
 The result of applying the argument to the function will be returned by the action.
+
+<details>
+<summary>An example:</summary>
 
 A useful and simple example of a function could be to add quotes to a string:
 
-```
+```yaml
 shouldBeAString: {{ quote .Values.myString }}
 ```
 
 We assume that `myString=FooBar`, thus the result of the function will be `shouldBeAString: "FooBar"`.
 
-[Helm Documentation on using functions](https://helm.sh/docs/chart_template_guide/functions_and_pipelines/#helm)
+</details>
 
-[Full list of available functions](https://helm.sh/docs/chart_template_guide/function_list/)
+> :bulb: Documentation links:
+>
+> [Helm Documentation on using functions](https://helm.sh/docs/chart_template_guide/functions_and_pipelines/#helm)
+>
+> [Full list of available functions](https://helm.sh/docs/chart_template_guide/function_list/)
 
 ### Helm Pipelines
 
@@ -85,10 +99,14 @@ Pipelines allow us to use the output of one function as the input of another fun
 
 Where the result of function1 is used as the argument for function2, and the result of function2 is returned from the action.
 
+<details>
+<summary>More information:</summary>
+
 Pipelines are written using the "pipe" character `|`.
 
 We can rewrite our quoting example above with a pipeline:
-```
+
+```yaml
 shouldBeAString: {{ .Values.myString | quote }}
 ```
 
@@ -99,7 +117,8 @@ Which will produce the exact same result.
 We can use as many functions as we want to in a pipeline.
 
 For example if we wanted to make sure that our string only contains lower case characters, we can use the `lower` function in our pipeline:
-```
+
+```yaml
 shouldBeALowerCaseString: {{ .Values.myString | lower | quote }}
 ```
 
@@ -107,7 +126,11 @@ Which would first change the value of `myString=FooBar` to lowercase, and then a
 
 The result would be: `shouldBeALowerCaseString: "foobar"`
 
-[Documentation on using pipelines](https://helm.sh/docs/chart_template_guide/functions_and_pipelines/#pipelines)
+> :bulb: Documentation links:
+>
+> [Documentation on using pipelines](https://helm.sh/docs/chart_template_guide/functions_and_pipelines/#pipelines)
+
+</details>
 
 ## Exercise
 
@@ -131,6 +154,8 @@ If you get stuck, or you want to see how the final chart looks, there is a solve
 <summary>Steps:</summary>
 
 **Make CPU and Memory Limits Configurable for the Sentences Deployment**
+
+> we are going to work with the file called `sentences-deployment.yaml` if nothing else is described
 
 So far our sentences deployment has a hard-coded definition of each pods resource limits, in this case the CPU request and the CPU limit:
 
