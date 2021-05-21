@@ -9,17 +9,17 @@
 
 ## Exercise
 
-Install the Bitnami wordpress chart on your cluster, by first pulling it down to out machine, alternating it and use it to apply the chart on the cluster.
+Install the Bitnami wordpress chart on your cluster, by first pulling it down to your machine, alternating it and use it to apply the chart on the cluster.
 
 ### Overview
 
-- install bitnami repo
-- helm pull --untar bitnami/wordpress
-- inspect the `chart.yaml` and the `charts/` folder
-- install with a `values.yaml` file `helm install my-wordpress -f values.yaml wordpress`
-- change the dependency version of mariaDB
-- helm dependency update
-- install the new version
+- Install bitnami repo
+- `helm pull --untar bitnami/wordpress`
+- Inspect the `chart.yaml` and the `charts/` folder
+- Install with a `values.yaml` file `helm install my-wordpress -f values.yaml wordpress`
+- Change the dependency version of mariaDB
+- `helm dependency update`
+- Install the new version
 
 ### Step-by-step
 
@@ -28,20 +28,21 @@ Install the Bitnami wordpress chart on your cluster, by first pulling it down to
 
 **Install Bitnami Helm repo**
 
-To install the Bitnami Helm Repo and update Helm's
-local list of Charts, run:
+Install the Bitnami Helm Repo and update Helm's local list of Charts:
 
-- `helm repo add bitnami https://charts.bitnami.com/bitnami`
-- `helm repo update`
+```
+helm repo add bitnami https://charts.bitnami.com/bitnami
+helm repo update
+```
 
 **Pull down the wordpress chart**
 
-We are going to look into the wordpress chart before applying it. 
+We are going to have a look at the wordpress chart before applying it. 
 
-- navigate to the `external-charts` folder with your terminal.
-- pull down the chart from bitnami: `helm pull --untar bitnami/wordpress`
+- Navigate to the `external-charts` folder with your terminal.
+- Pull down the chart from bitnami: `helm pull --untar bitnami/wordpress`
 
-- your folder should now look something like the following:
+Your folder should now look something like the following:
 
 ```sh
 .
@@ -66,10 +67,10 @@ We are going to look into the wordpress chart before applying it.
 
 **Install the chart**
 
-- set your own username and password in our pre-made values file in `external-charts/values.yaml`
-- install the chart in your cluster: `helm install my-wordpress wordpress -f values.yaml`
-- inspect that all pods comes online: `kubectl get pods,deployments`
-- try to access the wordpress site with the new external loadbalancer ip: `kubectl get svc`
+- Set your own username and password in our pre-made values file in `external-charts/values.yaml`
+- Install the chart in your cluster: `helm install my-wordpress wordpress -f values.yaml`
+- Inspect that all pods comes online: `kubectl get pods,deployments`
+- Try to access the wordpress site with the new external loadbalancer ip: `kubectl get svc`
 
 **change the dependency version of memcached**
 
@@ -79,7 +80,7 @@ We will try alternating one of the dependencies before deploying again.
 <details>
       <summary>Why is there 2 versions?</summary>
 
-> remember that a chart has two versions: Chart version called `version` and application version `appVersion`
+> :bulb: Remember that a chart has two versions: Chart version called `version` and application version `appVersion`
 
 </details>
 
