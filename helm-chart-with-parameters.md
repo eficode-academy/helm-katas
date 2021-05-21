@@ -136,7 +136,7 @@ There are a lot of arguments in this deployment that we might want to parameteri
 Let start by parameterizing the replicas.
 This key is currently not in the deployment specification, so we have to add it.
 
-- add `replicas: {{ .Values.sentences.sentences.replicas }}` to the yaml:
+- add `replicas: {{ .Values.sentences.replicas }}` to the yaml:
 
 ```yaml
 apiVersion: apps/v1
