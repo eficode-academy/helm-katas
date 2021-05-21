@@ -456,10 +456,12 @@ Success! Our resources are now properly formatted and indented.
 
 **Make the Resources Pipeline more Readable by Managing Whitespace**
 
-While the resources parameterization we have created so far works, it looks a bit odd without any indentation in the yaml code, so let's try to fix that.
+While the resources parameterization we have created so far works, it looks a bit odd without any indentation in the `templates/sentences-deployment.yaml`.
+We can fix that by controlling the whitespaces with functions.
 
-First of all we can change the first function call to `toYaml` to a pipeline:
-```
+- change the first function call to `toYaml` to a pipeline:
+
+```yaml
 {{ .Values.sentences.resources | toYaml | indent 10 }}
 ```
 
@@ -468,15 +470,20 @@ The pipeline syntax seems to be preferred, but you can use whichever style you p
 
 Next we use a `{{-` to consume all whitespace to the left of the action.
 
+- Change the action adding the whitespace handling in the beginning like the example below:
+
 ```
 {{- .Values.sentences.resources | toYaml | indent 10 }}
 ```
 
-This means that there will **not be any whitespace** before our rendered resource map, so we need to add a newline.
+> :bulb: rendering this will result in an error because newlines are also considered "whitespace".
+> This means that there will **not be any whitespace** before our rendered resource map, so we need to add a newline.
 
 We can do this simply by using the `nindent` function instead of the `indent` function, which will add a newline before the block being indented.
 
 Since we add the newline and all of the whitespace with functions, we can write the action at the logical indentation in the template yaml.
+
+- Change the `indent` function to `nindent` like the example below
 
 ```yaml
 apiVersion: apps/v1
@@ -492,9 +499,12 @@ spec:
         resources:
           {{- .Values.sentences.resources | toYaml | nindent 10 }}
 ```
-And the resulting template is much cleaner and easier to read.
 
-You can now try to add memory specifications to your `values.yaml`:
+- Test that it works by letting helm render it: `helm template sentence-app --show-only templates/sentences-deployment.yaml`
+
+The resulting template is much cleaner and easier to read.
+
+- Try to add memory specifications to your `values.yaml`:
 
 ```yaml
 sentences:
@@ -508,7 +518,7 @@ sentences:
       memory: "500Mi"
 ```
 
-And render the template:
+- And render the template:
 
 ```sh
 $ helm template sentence-app --show-only templates/sentences-deployment.yaml
