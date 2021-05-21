@@ -1,0 +1,4 @@
+sentences:
+  replicas: 2
+  repository: releasepraqma/sentences
+  tag: latest

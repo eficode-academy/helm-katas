@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: sentences
+    component: name
+  name: sentence-name
+spec:
+  replicas: {{ .Values.sentencesName.replicas }}
+  selector:
+    matchLabels:
+      app: sentences
+      component: name
+  template:
+    metadata:
+      labels:
+        app: sentences
+        component: name
+      annotations:
+        prometheus.io/scrape: 'true'
+        prometheus.io/port: '8080'
+        prometheus.io/path: '/metrics'
+    spec:
+      #priorityClassName: medium-priority
+      containers:
+      - image: {{ .Values.global.organization }}/{{ .Values.sentencesName.repository }}:{{ .Values.sentencesName.tag }}
+        imagePullPolicy: Always
+        name: sentences
+        resources:
+          requests:
+            cpu: 0.25
+          limits:
+            cpu: 0.25
