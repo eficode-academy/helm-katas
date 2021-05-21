@@ -9,13 +9,13 @@
 
 ## Introduction
 
-Sometimes we to do different things in our templates depending on how our deployment is to be configured.
+Sometimes we want to do different things in our templates depending on how our deployment is to be configured.
 
-For example we might want to specify a specific port to use for a NodePort type service, but only want to that if the service is of type NodePort.
+For example we might want to specify a specific port to use for a NodePort service, but only if the service is of type NodePort.
 
 To achieve this we can use conditionals and control flow in our Helm code.
 
-Further we can define templates and use these customize sections of code that are often reused.
+Further we can define templates for chunks of code we want to reuse, but with different parameters throughout the code.
 
 ### Helm Control Flow and Conditionals
 
@@ -29,6 +29,7 @@ The simplest form is an `if` statement:
 {{ end }}
 ```
 > :bulb: We write `<pipeline>` here to indicate that the argument for the conditional can be as simple or complicated as needed.
+
 > :bulb: Referencing a value is implcitly a valid pipeline!
 
 A pipeline is evaluated as false if it returns:
@@ -75,12 +76,12 @@ We can also use `else if` if we have multiple conditions:
 
 Helm has a number of functions that can be used in the conditionals like `and` and `eq`.
 
-We can use the `eq` or 'equals' function to check if if value matches anothre predefined value:
+We can use the `eq` or 'equals' function to check if a value matches another predefined value:
 ```
 {{ eq .Values.myVal "MatchThis" }}
 ```
 
-We can even use these as arguments to other functions like the `and` function, which returns true if both of it's argumetns are true:
+We can even use these as arguments to other functions like the `and` function, which returns true if both of it's arguments are true:
 
 ```
 {{ and (eq .Values.myVal "MatchThis") .Values.myOtherVal }}
@@ -96,7 +97,7 @@ We could even use the above `and` example as the conditional for an `if` stateme
 {{ end }}
 ```
 
-There are a number of functions available that you can use control the flow of your templates: [Control flow functions documentation](https://helm.sh/docs/chart_template_guide/function_list/#logic-and-flow-control-functions)
+There are a number of functions available that you can use to control the flow of your templates: [Control flow functions documentation](https://helm.sh/docs/chart_template_guide/function_list/#logic-and-flow-control-functions)
 
 ### Helm Templates
 
@@ -124,7 +125,7 @@ foo: {{ .Values.bar }}
 {{ end }}
 ```
 
-When invoking the template, we must pass an object containing the values, if we want to make the entire `.Values` avaialble, we specify the entire context with a 'dot' `.`:
+When invoking the template, we must pass an object containing the values, if we want to make the entire `.Values` available, we specify the entire context with a 'dot' `.`:
 
 ```
 {{ template "myTemplateWithArgs" . }}
@@ -136,11 +137,12 @@ We can also specify a specific subset for the template to use:
 {{ template "myTemplateWithArgs" .Values.myArgs }}
 ```
 
-You can place Helm templates anywhere in your `templates/` directory, but by convention, templates are usually placed in `templates/_helpers.tpl`, which Helm will not try to render as part of your chart.
+You can place helm templates anywhere in your `templates/` directory, but by convention, templates are usually placed in `templates/_helpers.tpl`.
+Helm will not try to render `templates/_helpers.tpl` as part of your chart.
 
 [Templates Documentation](https://helm.sh/docs/chart_best_practices/templates/#helm)
 
-You can use templates in pipelines, but in that case you must use the `include` keyword instead of `template`:
+You can use templates in pipelines, but to do so you must use the `include` keyword instead of `template`:
 
 ```
 {{ include "myTemplateWithArgs" .Values.myArgs | indent 4 }}
@@ -152,13 +154,14 @@ When using `include` you must specify the context for the template to use: `{{ i
 
 ## Exercise
 
-In this exercise we will first conditionally specify which nodePort for our sentences service to use.
+In this exercise we will first conditionally specify which nodePort our sentences service should use.
+
 Then we will template the resource maps of the deployments, using conditional overrides.
 
 ### Overview
 
 - Make the sentences service type parameterized
-- Conditionally specify `nodePort`
+- Conditionally specify which nodePort to use
 - Template resources map for deployments
 - Conditionally override the template
 
@@ -175,6 +178,8 @@ If you get stuck, or you want to see how the final chart looks, there is a solve
 
 First let's have a look at the sentences service template, the file is located in `sentence-app/templates/sentences-svc.yaml`
 
+<details>
+<summary>Default sentences-svc.yaml</summary>
 ```yaml
 apiVersion: v1
 kind: Service
@@ -193,8 +198,9 @@ spec:
     component: main
   type: NodePort
 ```
+</details>
 
-As we can see the the type and ports for the service are hard-coded in the service template.
+The type and ports for the service are hard-coded in the service template.
 
 Let's make the type a parameter:
 
@@ -204,12 +210,12 @@ kind: Service
 ...
 spec:
   ...
-  type: {{ .Values.sentence.service.type }}
+  type: {{ .Values.sentences.service.type }}
 ```
 
-Add the type your `values.yaml`:
+Add the type to your `values.yaml`:
 ```yaml
-sentence:
+sentences:
   ...
   service:
     type: ClusterIP
@@ -232,17 +238,17 @@ spec:
 Sweet, that works.
 Let's try to change the `type` in your `values.yaml` to `NodePort`.
 
-**Conditionally specify nodePort**
+Render the template again, and verify that it is now set to `NodePort`.
 
-Render the file again.
+**Conditionally specify which nodePort to use**
 
-When using the `NodePort` service type Kubernetes allows us to specify which port we would like to use.
+When using the `NodePort` service type, Kubernetes allows us to specify which port we would like to use.
 This argument is only relevant when using the `NodePort` service type, so let's make a conditional that only adds the port if the type is NodePort.
 
 Add the port to your `values.yaml`:
 
 ```yaml
-sentence:
+sentences:
   ...
   service:
     type: NodePort
@@ -260,7 +266,7 @@ spec:
   - port: 8080
     protocol: TCP
     targetPort: 8080
-    {{ if and (eq .Values.sentences.service.type "NodePort") .Values.sentences.service.nodePort -}}
+    {{- if and (eq .Values.sentences.service.type "NodePort") .Values.sentences.service.nodePort }}
     nodePort: {{ .Values.sentences.service.nodePort }}
     {{- end }}
   ...
@@ -289,7 +295,7 @@ spec:
   type: NodePort
 ```
 
-Now let's try to change the type back to `ClusterIP` in values file, and render the template again:
+Now let's try to change the type back to `ClusterIP` in the values file, and render the template again:
 
 ```sh
 $ helm template sentence-app --show-only templates/sentences-svc.yaml
@@ -311,7 +317,7 @@ So that we can verify that the `nodePort` key is only added when the `type` is s
 
 **Template resources map for deployments**
 
-In the previous exercise we learned how to parameterize the `resoruces` map of our deployments.
+In the [previous exercise](https://github.com/eficode-academy/helm-katas/blob/main/helm-chart-whitespace-pipelines-functions.md) we learned how to parameterize the `resoruces` map of our deployments.
 
 Now we would like to have a sensible default for our pod resources, with the ability to override the default on a per service basis.
 
@@ -320,7 +326,7 @@ To do this we will use a `template`.
 Let's create a template file:
 
 ```sh
-touch helm-chart/sentence-app/templates/_helpers.tpl
+touch sentence-app/templates/_helpers.tpl
 ```
 > :bulb: You can create the file in any way you want, it just has to be placed in the `templates` directory.
 
@@ -447,7 +453,7 @@ There we go!
 
 **Conditionally override the template**
 
-But now our sentences deployment will always use the resources map specified in the template, so lets a condition so that we can override it:
+But now our sentences deployment will always use the resources map specified in the template, so lets add a condition so that we can override it:
 
 Edit your `_helpers.tpl` and the following if statement below the `define` line:
 
@@ -458,7 +464,7 @@ resources:
 {{ else }}
 ```
 
-We also need to add a `{{ end }}` to delimit the `if` statement:
+We also need to add a `{{- end -}}` to delimit the `if` statement:
 
 ```yaml
     ...
@@ -466,9 +472,9 @@ We also need to add a `{{ end }}` to delimit the `if` statement:
 {{- end -}}
 {{- end -}}
 ```
+> :bulb: We end up having two `{{- end -}}` at the end of the file because we have to delimit both the template `define` and the `if` statement.
 
 The final `_helpers.tpl` should look like this:
-
 
 ```yaml
 {{- define "resources" -}}
@@ -487,7 +493,7 @@ resources:
 {{- end -}}
 ```
 
-Now we setup our template so that it expects to be passed a context that potentially contains a `resources` map.
+Now we have modified our template, so that it expects a `context` that potentially contains a `resources` map.
 
 This means that if the context indeed contains a `resources` map, then it will be rendered to yaml and returned, if not the default resources map is returned.
 
@@ -578,8 +584,20 @@ spec:
 
 Which means that the template will be used.
 
-The neat thing here is that we can use the same template in the `age` and `name` deployments, such if we add a `resources` map for those functions, then those would override the template, which means that we can specify custom resources requests and limits for each deployment, just by setting the values in our `values.yaml`.
+The neat thing here is that we can use the same template in the `age` and `name` deployments.
+
+Now if we do not specify any resource limitations, the defaults will be used, but we can override those simply by adding limitations to the `values.yaml`.
 
 </details>
 
-## Cleanup
+### Extra Exercises
+
+If you have more time, or you want to practice using templates and conditionals then you can do the extra steps:
+
+<!-- <details> -->
+<!-- <summary>Extras</summart> -->
+<!-- </details> -->
+
+### Food for thought
+
+- When should you use templates in Helm?
