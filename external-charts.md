@@ -63,7 +63,7 @@ Your folder should now look something like the following:
 **inspect the `chart.yaml` and the `charts/` folder**
 
 - Look at the `external-charts/wordpress/Chart.yaml` file to see the three dependencies that wordpress depends on; MariaDB, Memcached, and Common.
-- Look in the `external-charts/wordpress/charts` folder to see the three dependencies also getting pulled down
+- Look in the `external-charts/wordpress/charts` folder to see the three dependencies also getting pulled down, each in their own folder.
 
 **Install the chart**
 
@@ -72,22 +72,22 @@ Your folder should now look something like the following:
 - Inspect that all pods comes online: `kubectl get pods,deployments`
 - Try to access the wordpress site with the new external loadbalancer ip: `kubectl get svc`
 
+> note: you might be redirected to an self-signed HTTPS site. It's perfectly fine, and simply because we do not have a trused cert authority assigned.
+
+- Try to log into wordpress backend by accessing the admin site on: `https://<LoadBalancerIP>/admin`
+
 **change the dependency version of memcached**
 
 When pulling a chart down with dependencies, the dependency charts are getting pulled down as well.
 We will try alternating one of the dependencies before deploying again.
 
-<details>
-      <summary>Why is there 2 versions?</summary>
-
-> :bulb: Remember that a chart has two versions: Chart version called `version` and application version `appVersion`
-
-</details>
-
 - Find the avaliable versions for memcached with `helm search repo memcached -l`
 
-**helm dependency update**
+> :bulb: remember that a chart has two versions: Chart version called `version` and application version `appVersion`
 
+- Try changing the version
+
+**helm dependency update**
 
 
 **install the new one**
