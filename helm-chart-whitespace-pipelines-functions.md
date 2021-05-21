@@ -306,7 +306,7 @@ This is getting a bit hard to read, also we would be enforcing these defaults on
 
 So instead let's make the entire `resources` map parameterized, but only for the values that are provided by the user.
 
-So let's add our cpu resource values to our values.yaml:
+- Add cpu resource values to our `values.yaml`:
 
 ```yaml
 sentences:
@@ -318,7 +318,7 @@ sentences:
       cpu: 0.50
 ```
 
-And modify our sentences deployment:
+- Modify our `templates/sentences-deployment.yaml`:
 
 ```yaml
 apiVersion: apps/v1
@@ -373,7 +373,8 @@ spec:
           {{ toYaml .Values.sentences.resources }}
 ```
 
-Let's try to render the template:
+- Add the `toYaml` function to the action like shown above
+- Render the template:
 
 ```sh
 $ helm template sentence-app --show-only templates/sentences-deployment.yaml
