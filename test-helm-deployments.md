@@ -91,7 +91,7 @@ spec:
 
 ### command vs. args
 
-When writing helm tests, you are likely to want to override the origin `ENTRYPOINT` or `CMD` defined in the Dockerfile of the image used in the test.
+When writing helm tests, you are likely to want to override the original `ENTRYPOINT` or `CMD` defined in the Dockerfile of the image used in the test.
 In kubernetes this is done, slightly unintuitively, by using the `command` key of the container spec to define the `ENTRYPOINT`, and the `args` key to define the `CMD` of the container.
 
 An example of overwriting the entrypoint of container:
@@ -144,7 +144,7 @@ metadata:
 [Further Reading](https://helm.sh/docs/topics/charts_hooks/)
 
 <details>
-<summary>:bulb: (Don't Put) Multiple Test-Containers in the same Pod</summary>
+<summary>:bulb: (Don't put) Multiple Test-Containers in the same Pod</summary>
 
 > Best practice when writing helm tests is to have each test container in it's own pod, but you can technically add as many containers to your test pods as you want.
 > Having multiple containers in the same pod, will mean that the pod will only succeed if all of the containers exit successfully, and the pod will fail if just one of the containers exit unsuccessfully.
@@ -163,7 +163,7 @@ Helm tests are executed with the `helm test` command followed by the name of the
 $ helm test [RELEASE] [flags]
 ```
 
-This will run all test specified in the helm chart.
+This will run all tests specified in the helm chart.
 
 [Further Reading](https://helm.sh/docs/helm/helm_test/)
 
@@ -172,7 +172,7 @@ This will run all test specified in the helm chart.
 
 ### Viewing Test Logs
 
-The stdout/stderr of the test pods can be conveniently viewed when running tests by using the `--logs` flag on the test command.
+The `stdout` and `stderr` of the test pods can be conveniently viewed when running tests by using the `--logs` flag on the test command.
 
 ```sh
 $ helm test --logs [RELEASE]
@@ -206,9 +206,9 @@ Hence the above command would first install the chart, then wait for all of the 
 - Execute both tests
 
 To do the exercises you can use the sentence helm chart you have already created.
-Otherwise, the directory `helm-test/sentence-test-start` contains a clean starting point if you need it.
+Otherwise, the directory `test-helm-deployments/start` contains a clean starting point if you need it.
 
-If you get stuck on any of the exercises, or want to see how the finished chart should look, you can look at the finished chart `helm-test/sentence-test-done`.
+If you get stuck on any of the exercises, or want to see how the finished chart should look, you can look at the finished chart `test-helm-deployments/done`.
 
 ### Step by step instructions
 
@@ -220,7 +220,7 @@ If you get stuck on any of the exercises, or want to see how the finished chart 
 - add a `tests` directory to the `templates` directory of your sentences helm chart:
 
 ```sh
-mkdir sentence-app/templates/tests
+$ mkdir sentence-app/templates/tests
 ```
 
 - Create a file in the new tests directory called `sentence-svc-test.yaml`
@@ -271,11 +271,11 @@ REVISION: 2
 
 - Verify that all resources are correctly deployed with `kubectl get pods`.
 
-> It is important that all pods are in the `ready` state, since otherwise we might get a false negative when we run the test.
+> It is important that all pods are in the `READY` state, since otherwise we might get a false negative when we run the test.
 
-- Execute the test: `helm test sentences`
+- Execute the test: `$ helm test sentences`
 
-- Verify that your output is successfull like the below example:
+- Verify that your output is successful like the below example:
 
 ```sh
 $ helm test sentences
@@ -404,13 +404,18 @@ The test should succeed.
 **Add a new test which uses regex to check that the returned body of the sentence service is correct**
 
 Helm test pod specs can contain any container executing arbitrary commands.
-We will use regex to test that the body of the HTTP response follows an expected pattern, in order verify that the service is not only responding, but returns the correct result.
 
-We have prepared a small golang program that will query the endpoint and verify the regex.
+Therefore we can create containers with custom code to test our deployments.
+
+For this test we will use `regex` to test that the body returned form the sentences application is valid.
+Which means that we can test that the deployment is not only responding, but that it is responding correctly.
+
+We have prepared a small golang program that will query the endpoint and check the response using regex.
+
 The program has already been packaged in a [docker image](https://hub.docker.com/r/releasepraqma/sentence-regex-test) so that we can use it a test spec.
 
 <details>
-      <summary>More details</summary>
+      <summary>More details about the regex-tester</summary>
 
 The sentence application returns a response that looks like this:
 
@@ -429,7 +434,7 @@ If you are not sure how regex works, then don't worry, the important part is tha
 We could verify the regex using shell commands, but that can get messy and hard to maintain, so let's use a programming language to write our test in.
 
 The golang code is located in `helm-test/sentence-regex-test/sentence_regex.go`, but the implementation is not important for the purpose of this exercise.
-The program will return a exit code 0 if the regex matches, and 1 if it does not.
+The program will return an exit code 0 if the regex matches, and 1 if it does not.
 
 </details>
 
@@ -454,7 +459,8 @@ spec:
       args: ["http://{{ .Values.sentences.service.name }}:{{ .Values.sentences.service.port }}"]
 ```
 
-The above pod spec should look familiar, and the interesting to note is that it uses the image with the regex golang test, and takes the templated endpoint as it's argument.
+The above pod spec should look familiar.
+What is interesting to note is that it uses the image with the regex golang test, and that it takes the templated endpoint as it's argument.
 
 **Execute both tests**
 
