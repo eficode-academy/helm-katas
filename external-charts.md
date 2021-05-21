@@ -71,8 +71,24 @@ We are going to look into the wordpress chart before applying it.
 - inspect that all pods comes online: `kubectl get pods,deployments`
 - try to access the wordpress site with the new external loadbalancer ip: `kubectl get svc`
 
-**change the dependency version of mariaDB**
+**change the dependency version of memcached**
+
+When pulling a chart down with dependencies, the dependency charts are getting pulled down as well.
+We will try alternating one of the dependencies before deploying again.
+
+<details>
+      <summary>Why is there 2 versions?</summary>
+
+> remember that a chart has two versions: Chart version called `version` and application version `appVersion`
+
+</details>
+
+- Find the avaliable versions for memcached with `helm search repo memcached -l`
+
 **helm dependency update**
+
+
+
 **install the new one**
 
 </details>
