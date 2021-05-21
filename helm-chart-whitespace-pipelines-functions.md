@@ -25,7 +25,9 @@ The actions delimiters `{{` and `}}` can be augmented with a dash `-`:
 
 Whitespace includes all `spaces`, `tabs` and `newlines`!
 
-An example:
+<details>
+<summary>An example:</summary>
+
 ```
 PRE
   {{- "mytext" -}}
@@ -38,7 +40,7 @@ PREmytextPOST
 ```
 
 Because all of the whitespace around the action will be consumed by the `{{-` and `-}}`, until non-whitespace characters are encountered.
-
+</details>
 
 There are also functions for managing whitespace, like adding a configurable amount of indentation with the `indent` function:
 
@@ -47,33 +49,45 @@ There are also functions for managing whitespace, like adding a configurable amo
 ```
 
 Would add 4 spaces in front of the injected value.
+
 Similarly `nindent` functions the same as `indent`, but also adds a newline before the line being indented.
 
-[Documentation](https://helm.sh/docs/chart_template_guide/control_structures/#controlling-whitespace)
-
-[indent and nindent documentation](https://helm.sh/docs/chart_template_guide/function_list/#indent)
+> :bulb: Documentation links:
+>
+>[Documentation for controlling whitespaces](https://helm.sh/docs/chart_template_guide/control_structures/#controlling-whitespace)
+>
+>[Indent and nindent documentation](https://helm.sh/docs/chart_template_guide/function_list/#indent)
 
 ### Helm Functions
 
 Helm has a number of `functions` available that enable more elaborate templating.
 
 Functions are used in actions and take at least one argument:
+
 ```
 {{ function argument1 argument2 }}
 ```
+
 The result of applying the argument to the function will be returned by the action.
+
+<details>
+<summary>An example:</summary>
 
 A useful and simple example of a function could be to add quotes to a string:
 
-```
+```yaml
 shouldBeAString: {{ quote .Values.myString }}
 ```
 
 We assume that `myString=FooBar`, thus the result of the function will be `shouldBeAString: "FooBar"`.
 
-[Helm Documentation on using functions](https://helm.sh/docs/chart_template_guide/functions_and_pipelines/#helm)
+</details>
 
-[Full list of available functions](https://helm.sh/docs/chart_template_guide/function_list/)
+> :bulb: Documentation links:
+>
+> [Helm Documentation on using functions](https://helm.sh/docs/chart_template_guide/functions_and_pipelines/#helm)
+>
+> [Full list of available functions](https://helm.sh/docs/chart_template_guide/function_list/)
 
 ### Helm Pipelines
 
@@ -85,10 +99,14 @@ Pipelines allow us to use the output of one function as the input of another fun
 
 Where the result of function1 is used as the argument for function2, and the result of function2 is returned from the action.
 
+<details>
+<summary>More information:</summary>
+
 Pipelines are written using the "pipe" character `|`.
 
 We can rewrite our quoting example above with a pipeline:
-```
+
+```yaml
 shouldBeAString: {{ .Values.myString | quote }}
 ```
 
@@ -99,7 +117,8 @@ Which will produce the exact same result.
 We can use as many functions as we want to in a pipeline.
 
 For example if we wanted to make sure that our string only contains lower case characters, we can use the `lower` function in our pipeline:
-```
+
+```yaml
 shouldBeALowerCaseString: {{ .Values.myString | lower | quote }}
 ```
 
@@ -107,7 +126,11 @@ Which would first change the value of `myString=FooBar` to lowercase, and then a
 
 The result would be: `shouldBeALowerCaseString: "foobar"`
 
-[Documentation on using pipelines](https://helm.sh/docs/chart_template_guide/functions_and_pipelines/#pipelines)
+> :bulb: Documentation links:
+>
+> [Documentation on using pipelines](https://helm.sh/docs/chart_template_guide/functions_and_pipelines/#pipelines)
+
+</details>
 
 ## Exercise
 
@@ -169,6 +192,8 @@ spec:
 
 Let's make the CPU request and limit configurable, we learned in the last exercise to use `actions` to accomplish this:
 
+- Change your `sentences-deployment.yaml` to have parameterized CPU resource requests and limits like below.
+
 ```yaml
 apiVersion: apps/v1
 kind: Deployment
@@ -182,13 +207,13 @@ spec:
       - ...
         resources:
           requests:
-            cpu: {{ .Values.sentence.cpuRequest }}
+            cpu: {{ .Values.sentences.cpuRequest }}
           limits:
-            cpu: {{ .Values.sentence.cpuLimit }}
+            cpu: {{ .Values.sentences.cpuLimit }}
 ```
-Change your `sentences-deployment.yaml` to have parameterized CPU resource requests and limits like above.
 
 Check that your parameters are working:
+
 ```sh
 $ helm template sentence-app --show-only templates/sentences-deployment.yaml --set sentences.cpuRequest=0.25 --set sentences.cpuLimit=0.5
 # Source: sentence-app/templates/sentences-deployment.yaml
@@ -209,7 +234,7 @@ spec:
             cpu: 0.5
 ```
 
-**Add Default Values for CPU Resouces Requests and Limits**
+**Add Default Values for CPU Resources Requests and Limits**
 
 Maybe we don't always know what kind of limitations we want to put on our pods, but declaring a value like we do above means that we **have** to provide a value to render the template.
 
@@ -281,7 +306,7 @@ This is getting a bit hard to read, also we would be enforcing these defaults on
 
 So instead let's make the entire `resources` map parameterized, but only for the values that are provided by the user.
 
-So let's add our cpu resource values to our values.yaml:
+- Add CPU resource values to our `values.yaml`:
 
 ```yaml
 sentences:
@@ -293,7 +318,7 @@ sentences:
       cpu: 0.50
 ```
 
-And modify our sentences deployment:
+- Modify our `templates/sentences-deployment.yaml`:
 
 ```yaml
 apiVersion: apps/v1
@@ -348,7 +373,8 @@ spec:
           {{ toYaml .Values.sentences.resources }}
 ```
 
-Let's try to render the template:
+- Add the `toYaml` function to the action like shown above
+- Render the template:
 
 ```sh
 $ helm template sentence-app --show-only templates/sentences-deployment.yaml
@@ -402,7 +428,7 @@ spec:
 > :bulb: Notice that we remove all indentation in front of our action, as the `indent` function will handle creating all of the required whitespace.
 
 > :bulb: The 10 argument for the indent function is the number of characters to indent using spaces.
-> Your text editor likely has a character counter to allow you to see how many charters on the current line your caret is at, otherwise you can simply count the number spaces the block would have been indented.
+> Your text editor likely has a character counter to allow you to see how many characters on the current line your caret is at, otherwise you can simply count the number spaces the block would have been indented.
 
 Now let's try to render the template again:
 
@@ -430,10 +456,12 @@ Success! Our resources are now properly formatted and indented.
 
 **Make the Resources Pipeline more Readable by Managing Whitespace**
 
-While the resources parameterization we have created so far works, it looks a bit odd without any indentation in the yaml code, so let's try to fix that.
+While the resources parameterization we have created so far works, it looks a bit odd without any indentation in the `templates/sentences-deployment.yaml`.
+We can fix that by controlling the whitespaces with functions.
 
-First of all we can change the first function call to `toYaml` to a pipeline:
-```
+- change the first function call to `toYaml` to a pipeline:
+
+```yaml
 {{ .Values.sentences.resources | toYaml | indent 10 }}
 ```
 
@@ -442,15 +470,20 @@ The pipeline syntax seems to be preferred, but you can use whichever style you p
 
 Next we use a `{{-` to consume all whitespace to the left of the action.
 
+- Change the action adding the whitespace handling in the beginning like the example below:
+
 ```
 {{- .Values.sentences.resources | toYaml | indent 10 }}
 ```
 
-This means that there will **not be any whitespace** before our rendered resource map, so we need to add a newline.
+> :bulb: rendering this will result in an error because newlines are also considered "whitespace".
+> This means that there will **not be any whitespace** before our rendered resource map, so we need to add a newline.
 
-We can do this simply by using the `nindent` function instead of the `indent` function, which will add a newline before the block being indented.
+We can add a newline before our indented block by using the `nindent` function instead of the `indent` function.
 
 Since we add the newline and all of the whitespace with functions, we can write the action at the logical indentation in the template yaml.
+
+- Change the `indent` function to `nindent` like the example below
 
 ```yaml
 apiVersion: apps/v1
@@ -466,9 +499,12 @@ spec:
         resources:
           {{- .Values.sentences.resources | toYaml | nindent 10 }}
 ```
-And the resulting template is much cleaner and easier to read.
 
-You can now try to add memory specifications to your `values.yaml`:
+- Test that it works by letting helm render it: `helm template sentence-app --show-only templates/sentences-deployment.yaml`
+
+The resulting template is much cleaner and easier to read.
+
+- Try to add memory specifications to your `values.yaml`:
 
 ```yaml
 sentences:
@@ -482,7 +518,7 @@ sentences:
       memory: "500Mi"
 ```
 
-And render the template:
+- And render the template:
 
 ```sh
 $ helm template sentence-app --show-only templates/sentences-deployment.yaml
