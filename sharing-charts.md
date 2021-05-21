@@ -24,7 +24,7 @@ The chart we will work with in this exercise is located in the sharing charts fo
 - Package your chart
 - Create index.html and push `gh-pages` branch to github
 - Create index.yaml and push `gh-pages` branch to github
-- Add the new repository to your helm cli
+- Add the new repository to your Helm cli
 
 ### Step by step
 
@@ -98,12 +98,12 @@ generated: "2021-05-18T11:05:16.93437855Z"
 
 Congratulations! You have now made your first chart repository.
 
-**Add the new repository to your helm cli**
+**Add the new repository to your Helm cli**
 
 To test out your newly created repo, try to add it to your helm CLI.
 
-- Add the repository to helm: `helm repo add my-repo https://<yourGitHubUsername.github.io/helm-katas`
-- List your helm repositories to see the newly added repo: `helm repo list`
+- Add the repository to Helm: `helm repo add my-repo https://<yourGitHubUsername.github.io/helm-katas`
+- List your Helm repositories to see the newly added repo: `helm repo list`
 
 ```sh
 $ helm repo list
@@ -122,7 +122,7 @@ STATUS: deployed
 REVISION: 1
 ```
 
-- Watch the kubernetes object gets created with `kubectl get pods,svc`
+- Watch the Kubernetes object gets created with `kubectl get pods,svc`
 - Clean up by uninstalling the chart: `helm uninstall sentence-app`
 
 </details>

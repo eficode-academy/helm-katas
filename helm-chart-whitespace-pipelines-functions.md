@@ -8,7 +8,7 @@
 
 ## Introduction
 
-When writing helm charts you might need to do more elaborate templating than simply injecting values from parameters.
+When writing Helm charts you might need to do more elaborate templating than simply injecting values from parameters.
 
 For example setting default values, ensuring that strings are quoted and that blocks are indented correctly.
 
@@ -144,8 +144,8 @@ In this exercise we will use functions, pipelines and whitespace handling to par
 - Use a pipeline to properly indent resources map
 - Make the resources pipeline more readable by managing whitespace
 
-You can use your helm chart from the previous exercise as the starting point for this exercise.
-Alternatively there is a helm chart that picks up from the last exercise in `helm-katas/helm-chart-whitespace-functions-pipelines/start` that you can use.
+You can use your Helm chart from the previous exercise as the starting point for this exercise.
+Alternatively there is a Helm chart that picks up from the last exercise in `helm-katas/helm-chart-whitespace-functions-pipelines/start` that you can use.
 If you get stuck, or you want to see how the final chart looks, there is a solved version of the chart in `helm-katas/helm-chart-whitespace-functions-pipelines/done`.
 
 ### Step-by-Step
@@ -402,7 +402,7 @@ It looks better, the `resources` map from the values file is rendered as proper 
 
 To fix the indentation we can use the `indent` function to add a number of spaces in front of our rendered yaml.
 
-That means that we have to take the result of our toYaml function and use it as the input of the indent function, so we will use a pipeline:
+That means we have to take the result of our `toYaml` function and use it as the input of the `indent` function, so we will use a pipeline:
 
 ```
 {{ toYaml .Values.sentences.resources | indent 10 }}
@@ -500,7 +500,7 @@ spec:
           {{- .Values.sentences.resources | toYaml | nindent 10 }}
 ```
 
-- Test that it works by letting helm render it: `helm template sentence-app --show-only templates/sentences-deployment.yaml`
+- Test that it works by letting Helm render it: `helm template sentence-app --show-only templates/sentences-deployment.yaml`
 
 The resulting template is much cleaner and easier to read.
 

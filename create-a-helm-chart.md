@@ -2,7 +2,7 @@
 
 ## Learning goal
 
-- Create a basic helm chart for the `sentences`
+- Create a basic Helm chart for the `sentences`
   application
 
 ## Introduction
@@ -37,7 +37,7 @@ sentences-svc.yaml
 
 ### Overview
 
-- Create a skeleton helm chart
+- Create a skeleton Helm chart
 - Copy `sentences` kubernetes yaml into the chart
 - Lint and deploy our new chart
 
@@ -46,15 +46,15 @@ sentences-svc.yaml
 <details>
       <summary>More details</summary>
 
-**Create a skeleton helm chart**
+**Create a skeleton Helm chart**
 
-First we create a new directory for our helm chart, and then use the `helm create` command to create the chart skeleton:
+First we create a new directory for our Helm chart, and then use the `helm create` command to create the chart skeleton:
 
 - `mkdir helm-chart`
 - `cd helm-chart`
 - `helm create sentence-app`
 
-The `helm create` command we just issued created a lot of files that you might want to use when creating a new helm chart.
+The `helm create` command we just issued created a lot of files that you might want to use when creating a new Helm chart.
 We do not need all of those files for the chart we will be creating, therefore we will remove the files we do not need:
 
 - `rm -rf sentence-app/templates/*`
@@ -71,7 +71,7 @@ to the template folder:
 
 - `cp -v ../sentences-app/deploy/kubernetes/*.yaml sentence-app/templates/`
 
-Thats it - now we have a Helm chart for our
+That's it - now we have a Helm chart for our
 sentences application.
 
 > :bulb: It is a simple Helm chart in the sense
@@ -117,7 +117,7 @@ REVISION: 1
 TEST SUITE: None
 ```
 
-To see all the different objects that helm has
+To see all the different objects that Helm has
 created, use:
 
 ```shell
@@ -164,7 +164,7 @@ installation.
 ## Food for Thought
 
 In this exercise we created a single Helm chart
-for the complete application even though its based
+for the complete application even though it is based
 on three microservices. When would it make sense
 to have a Helm chart for each microservice?
 

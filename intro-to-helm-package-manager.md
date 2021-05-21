@@ -23,7 +23,7 @@ Helm helps you to:
   application deployment
 - Update/rollback and test application deployments
 
-## Using helm charts
+## Using Helm charts
 
 Helm uses a packaging format called charts. A
 Chart is a collection of files that describe k8s
@@ -64,7 +64,7 @@ command.
 
 ### Overview
 
-- Add a chart repository to your helm cli
+- Add a chart repository to your Helm cli
 - Install Nginx chart
 - Access the Nginx load balanced service
 - Look at the status of the deployment with
@@ -76,7 +76,7 @@ command.
 <details>
       <summary>More details</summary>
 
-**Add a chart repository to your helm cli**
+**Add a chart repository to your Helm cli**
 
 To install the Bitnami Helm Repo and update Helm's
 local list of Charts, run:
