@@ -234,7 +234,7 @@ spec:
             cpu: 0.5
 ```
 
-**Add Default Values for CPU Resouces Requests and Limits**
+**Add Default Values for CPU Resources Requests and Limits**
 
 Maybe we don't always know what kind of limitations we want to put on our pods, but declaring a value like we do above means that we **have** to provide a value to render the template.
 
@@ -306,7 +306,7 @@ This is getting a bit hard to read, also we would be enforcing these defaults on
 
 So instead let's make the entire `resources` map parameterized, but only for the values that are provided by the user.
 
-- Add cpu resource values to our `values.yaml`:
+- Add CPU resource values to our `values.yaml`:
 
 ```yaml
 sentences:
@@ -428,7 +428,7 @@ spec:
 > :bulb: Notice that we remove all indentation in front of our action, as the `indent` function will handle creating all of the required whitespace.
 
 > :bulb: The 10 argument for the indent function is the number of characters to indent using spaces.
-> Your text editor likely has a character counter to allow you to see how many charters on the current line your caret is at, otherwise you can simply count the number spaces the block would have been indented.
+> Your text editor likely has a character counter to allow you to see how many characters on the current line your caret is at, otherwise you can simply count the number spaces the block would have been indented.
 
 Now let's try to render the template again:
 
@@ -479,7 +479,7 @@ Next we use a `{{-` to consume all whitespace to the left of the action.
 > :bulb: rendering this will result in an error because newlines are also considered "whitespace".
 > This means that there will **not be any whitespace** before our rendered resource map, so we need to add a newline.
 
-We can do this simply by using the `nindent` function instead of the `indent` function, which will add a newline before the block being indented.
+We can add a newline before our indented block by using the `nindent` function instead of the `indent` function.
 
 Since we add the newline and all of the whitespace with functions, we can write the action at the logical indentation in the template yaml.
 
