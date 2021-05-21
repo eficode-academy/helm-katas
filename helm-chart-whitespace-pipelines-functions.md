@@ -24,10 +24,6 @@ The actions delimiters `{{` and `}}` can be augmented with a dash `-`:
 - `-}}` will consume all whitespace to the right of the action, including newlines.
 
 Whitespace includes all `spaces`, `tabs` and `newlines`!
-
-<details>
-<summary>An example:</summary>
-
 ```
 PRE
   {{- "mytext" -}}
@@ -38,9 +34,8 @@ Would render to:
 ```
 PREmytextPOST
 ```
-
 Because all of the whitespace around the action will be consumed by the `{{-` and `-}}`, until non-whitespace characters are encountered.
-</details>
+
 
 There are also functions for managing whitespace, like adding a configurable amount of indentation with the `indent` function:
 
@@ -70,18 +65,12 @@ Functions are used in actions and take at least one argument:
 
 The result of applying the argument to the function will be returned by the action.
 
-<details>
-<summary>An example:</summary>
-
 A useful and simple example of a function could be to add quotes to a string:
 
 ```yaml
 shouldBeAString: {{ quote .Values.myString }}
 ```
-
 We assume that `myString=FooBar`, thus the result of the function will be `shouldBeAString: "FooBar"`.
-
-</details>
 
 > :bulb: Documentation links:
 >
@@ -104,8 +93,11 @@ Where the result of function1 is used as the argument for function2, and the res
 
 Pipelines are written using the "pipe" character `|`.
 
-We can rewrite our quoting example above with a pipeline:
-
+We can rewrite our quoting example
+```yaml
+shouldBeAString: {{ quote .Values.myString }}
+```
+from above with a pipeline:
 ```yaml
 shouldBeAString: {{ .Values.myString | quote }}
 ```
