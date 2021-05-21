@@ -155,8 +155,6 @@ If you get stuck, or you want to see how the final chart looks, there is a solve
 
 **Make CPU and Memory Limits Configurable for the Sentences Deployment**
 
-> we are going to work with the file called `sentences-deployment.yaml` if nothing else is described
-
 So far our sentences deployment has a hard-coded definition of each pods resource limits, in this case the CPU request and the CPU limit:
 
 <details>
@@ -194,6 +192,8 @@ spec:
 
 Let's make the CPU request and limit configurable, we learned in the last exercise to use `actions` to accomplish this:
 
+- Change your `sentences-deployment.yaml` to have parameterized CPU resource requests and limits like below.
+
 ```yaml
 apiVersion: apps/v1
 kind: Deployment
@@ -207,13 +207,13 @@ spec:
       - ...
         resources:
           requests:
-            cpu: {{ .Values.sentence.cpuRequest }}
+            cpu: {{ .Values.sentences.cpuRequest }}
           limits:
-            cpu: {{ .Values.sentence.cpuLimit }}
+            cpu: {{ .Values.sentences.cpuLimit }}
 ```
-Change your `sentences-deployment.yaml` to have parameterized CPU resource requests and limits like above.
 
 Check that your parameters are working:
+
 ```sh
 $ helm template sentence-app --show-only templates/sentences-deployment.yaml --set sentences.cpuRequest=0.25 --set sentences.cpuLimit=0.5
 # Source: sentence-app/templates/sentences-deployment.yaml
