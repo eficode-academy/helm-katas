@@ -1,5 +1,7 @@
 # Helm and Helmsman
 
+> Note: this exercise is quite old, and might not work.
+
 This exercise will demonstrate a declarative approach to Helm chart installation
 using [Helmsman](https://github.com/Praqma/helmsman).
 
