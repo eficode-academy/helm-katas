@@ -309,15 +309,17 @@ spec:
   - port: 8080
     protocol: TCP
     targetPort: 8080
+
   ...
   type: ClusterIP
 ```
 
 So that we can verify that the `nodePort` key is only added when the `type` is set to `NodePort`.
+:bulb: Notice that there is an extra newline generated. That is possible to be removed but removal has been left out for clarity.
 
 **Template resources map for deployments**
 
-In the [previous exercise](https://github.com/eficode-academy/helm-katas/blob/main/helm-chart-whitespace-pipelines-functions.md) we learned how to parameterize the `resoruces` map of our deployments.
+In the [previous exercise](https://github.com/eficode-academy/helm-katas/blob/main/helm-chart-whitespace-pipelines-functions.md) we learned how to parameterize the `resources` map of our deployments.
 
 Now we would like to have a sensible default for our pod resources, with the ability to override the default on a per service basis.
 
