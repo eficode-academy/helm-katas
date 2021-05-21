@@ -9,7 +9,7 @@
 
 ## Introduction
 
-So far the helm chart we have created only has static values, meaning that every time we install it we get the exact same result.
+So far the helm chart we have created only contains static values, meaning that every time we install it we get the exact same result.
 
 In order to make the chart customizable, so that we can modify the chart for a specific use-case when we install it, we can use parameters.
 
@@ -212,7 +212,7 @@ spec:
 - Render the template file, and observe the new values getting reflected:
 
 ```sh
-$ helm template sentence-app/ --set sentences.replicas=2 --set sentences.repository=myiamge --set sentences.tag=mytag --show-only templates/sentences-deployment.yaml
+$ helm template sentence-app/ --set sentences.replicas=2 --set sentences.repository=myimage --set sentences.tag=mytag --show-only templates/sentences-deployment.yaml
 
 ---
 # Source: sentence-app/templates/sentences-deployment.yaml
@@ -228,7 +228,7 @@ spec:
     ...
     spec:
       containers:
-      - image: myiamge:mytag
+      - image: myimage:mytag
         ...
 ```
 
