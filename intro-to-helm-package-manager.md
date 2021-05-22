@@ -29,8 +29,6 @@ Helm uses a packaging format called charts. A
 Chart is a collection of files that describe k8s
 resources.
 
-<details>
-      <summary>More details</summary>
 Charts can be simple, describing something like a
 standalone web server but they can also be more
 complex, for example, a chart that represents a
@@ -48,7 +46,7 @@ because Helm wants to decouple the application to
 the repository in use.
 
 One of the largest Chart Repositories is the
-[BitNami Chart Repository](https://charts.bitnami.com/bitnami),
+[BitNami Chart Repository](https://charts.bitnami.com),
 which we will be using in these exercises.
 
 Helm chart repositories are very dynamic due to
@@ -57,8 +55,6 @@ list updated with all these changes, we need to
 occasionally run the
 [repository update](https://helm.sh/docs/helm/helm_repo_update/)
 command.
-
-</details>
 
 ## Exercise
 
