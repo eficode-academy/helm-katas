@@ -2,14 +2,14 @@
 
 ## Learning Goals
 
-- Create helm chart with parameterized values
+- Create Helm chart with parameterized values
 - Modify Existing template files to use parameterized values
 - Create `values.yaml` file to setup defaults for parameterized values
 - Render Helm chart with different values
 
 ## Introduction
 
-So far the helm chart we have created only contains static values, meaning that every time we install it we get the exact same result.
+So far the Helm chart we have created only contains static values, meaning that every time we install it we get the exact same result.
 
 In order to make the chart customizable, so that we can modify the chart for a specific use-case when we install it, we can use parameters.
 
@@ -21,7 +21,7 @@ Helm uses `go templates` under the hood, which enables powerful text templating 
 
 ### Parameterizing Helm Template Files
 
-Values are parameterized in helm by replacing the value you want to parameterize with `{{ .Values.<valueName> }}`.
+Values are parameterized in Helm by replacing the value you want to parameterize with `{{ .Values.<valueName> }}`.
 
 For example, if we have a deployment that species the number of replicas:
 ```yaml
@@ -65,7 +65,7 @@ A trivial example of an action that returns the text "kubernetes" would look lik
 {{ "kubernetes" }}
 ```
 
-That's not very useful though, so instead we will reference the `.Values` object which contains all of the values that we make available to helm to use:
+That's not very useful though, so instead we will reference the `.Values` object which contains all of the values that we make available to Helm to use:
 
 ```
 {{ .Values.orchestrationTool }}
@@ -100,7 +100,7 @@ If the name of this release is `mySentences`, then the resulting name of the dep
 
 There are two main ways for specifying the values that Helm should use when rendering our templates:
 
-- Using the imperative `--set key=value` option on helm commands.
+- Using the imperative `--set key=value` option on Helm commands.
 - Using declarative `values.yaml` values file, which specify each value that can be parameterized.
 
 The imperative approach is good for experiments or one off commands, while the declarative approach is good for repeatable installations and upgrades.
@@ -117,7 +117,7 @@ In this exercise we will add parameters to the sentences deployment, the "fronte
 - Create values file
 - Render the Template with the Values File
 
-You can use your chart from the previous exercise [create a helm chart](create-a-helm-chart.md), or if you want a clean starting point, you can use the files in `helm-katas/helm-chart-with-parameters/start`.
+You can use your chart from the previous exercise [create a Helm chart](create-a-helm-chart.md), or if you want a clean starting point, you can use the files in `helm-katas/helm-chart-with-parameters/start`.
 If you get stuck, or want to see how the chart looks after completing the exercise, look at the chart in `helm-katas/helm-chart-with-parameters/done`.
 
 ### Step-by-Step
@@ -127,7 +127,7 @@ If you get stuck, or want to see how the chart looks after completing the exerci
 
 **Modify Sentences Deployment**
 
-The sentences deployment should be in your helm chart under the templates directory: `sentence-app/templates/sentences-deployment.yaml`.
+The sentences deployment should be in your Helm chart under the templates directory: `sentence-app/templates/sentences-deployment.yaml`.
 
 - Open this file in your text editor.
 

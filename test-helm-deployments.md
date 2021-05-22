@@ -2,7 +2,7 @@
 
 ## Learning Goals
 
-- Write helm deployment tests
+- Write Helm deployment tests
 - Test deployments with the `helm test` command
 
 ## Introduction
@@ -92,7 +92,7 @@ spec:
 ### command vs. args
 
 When writing helm tests, you are likely to want to override the origin `ENTRYPOINT` or `CMD` defined in the Dockerfile of the image used in the test.
-In kubernetes this is done, slightly unintuitively, by using the `command` key of the container spec to define the `ENTRYPOINT`, and the `args` key to define the `CMD` of the container.
+In Kubernetes this is done, slightly unintuitively, by using the `command` key of the container spec to define the `ENTRYPOINT`, and the `args` key to define the `CMD` of the container.
 
 An example of overwriting the entrypoint of container:
 
@@ -119,7 +119,7 @@ You can of course also use `args` by itself without modifying the `command`.
 
 ### Helm Hooks / Automatically Removing Test Pods
 
-You can use helm hooks in your test pod specs to do useful things.
+You can use Helm hooks in your test pod specs to do useful things.
 An example could be to delete pods after they have completed successfully.
 This is done with the `helms.sh/hook-delete-policy: hook-succeeded` hook.
 The new hook is added to the annotations of the pod spec:
@@ -458,11 +458,11 @@ The above pod spec should look familiar, and the interesting to note is that it 
 
 **Execute both tests**
 
-- Upgrade the helm chart to install the new test.
+- Upgrade the Helm chart to install the new test.
 
 - Execute the test command.
 
-This time helm will execute both of our tests sequentially:
+This time Helm will execute both of our tests sequentially:
 
 ```sh
 $ helm test sentences
