@@ -39,7 +39,7 @@ helm repo update
 
 We are going to have a look at the wordpress chart before applying it. 
 
-- Navigate to the `external-charts` folder in the root of this repository in your terminal.
+- Navigate to the `external-charts/start` folder in the root of this repository in your terminal.
 - Pull down the chart from bitnami: `helm pull --untar bitnami/wordpress`
 
 Your folder should now look something like this:
