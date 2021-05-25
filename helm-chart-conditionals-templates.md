@@ -3,9 +3,9 @@
 ## Learning Goals
 
 - Helm control flow and conditionals
-- Use helm templates
+- Use Helm templates
 - Use context aware templates
-- Use helm templates in pipelines
+- Use Helm templates in pipelines
 
 ## Introduction
 
@@ -13,7 +13,7 @@ Sometimes we to do different things in our templates depending on how our deploy
 
 For example we might want to specify a specific port to use for a NodePort type service, but only want to that if the service is of type NodePort.
 
-To achieve this we can use conditionals and control flow in our helm code.
+To achieve this we can use conditionals and control flow in our Helm code.
 
 Further we can define templates and use these customize sections of code that are often reused.
 
@@ -136,7 +136,7 @@ We can also specify a specific subset for the template to use:
 {{ template "myTemplateWithArgs" .Values.myArgs }}
 ```
 
-You can place helm templates anywhere in your `templates/` directory, but by convention, templates are usually placed in `templates/_helpers.tpl`, which helm will not try to render as part of your chart.
+You can place Helm templates anywhere in your `templates/` directory, but by convention, templates are usually placed in `templates/_helpers.tpl`, which Helm will not try to render as part of your chart.
 
 [Templates Documentation](https://helm.sh/docs/chart_best_practices/templates/#helm)
 
@@ -158,12 +158,12 @@ Then we will template the resource maps of the deployments, using conditional ov
 ### Overview
 
 - Make the sentences service type parameterized
-- Conditionally specify nodePort
+- Conditionally specify `nodePort`
 - Template resources map for deployments
 - Conditionally override the template
 
-You can use your helm chart from the previous exercise as the starting point for this exercise.
-Alternatively there is a helm chart that picks up from the last exercise in `helm-katas/helm-chart-conditionals-templates/start` that you can use.
+You can use your Helm chart from the previous exercise as the starting point for this exercise.
+Alternatively there is a Helm chart that picks up from the last exercise in `helm-katas/helm-chart-conditionals-templates/start` that you can use.
 If you get stuck, or you want to see how the final chart looks, there is a solved version of the chart in `helm-katas/helm-chart-conditionals-templates/done`.
 
 ### Step-by-Step

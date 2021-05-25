@@ -23,14 +23,12 @@ Helm helps you to:
   application deployment
 - Update/rollback and test application deployments
 
-## Using helm charts
+## Using Helm charts
 
 Helm uses a packaging format called charts. A
 Chart is a collection of files that describe k8s
 resources.
 
-<details>
-      <summary>More details</summary>
 Charts can be simple, describing something like a
 standalone web server but they can also be more
 complex, for example, a chart that represents a
@@ -48,7 +46,7 @@ because Helm wants to decouple the application to
 the repository in use.
 
 One of the largest Chart Repositories is the
-[BitNami Chart Repository](https://charts.bitnami.com/bitnami),
+[BitNami Chart Repository](https://charts.bitnami.com),
 which we will be using in these exercises.
 
 Helm chart repositories are very dynamic due to
@@ -58,13 +56,11 @@ occasionally run the
 [repository update](https://helm.sh/docs/helm/helm_repo_update/)
 command.
 
-</details>
-
 ## Exercise
 
 ### Overview
 
-- Add a chart repository to your helm cli
+- Add a chart repository to your Helm cli
 - Install Nginx chart
 - Access the Nginx load balanced service
 - Look at the status of the deployment with
@@ -76,7 +72,7 @@ command.
 <details>
       <summary>More details</summary>
 
-**Add a chart repository to your helm cli**
+**Add a chart repository to your Helm cli**
 
 To install the Bitnami Helm Repo and update Helm's
 local list of Charts, run:
