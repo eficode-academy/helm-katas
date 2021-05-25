@@ -131,6 +131,19 @@ REVISION: 1
 
 > :bulb: there is a new way of sharing charts now; using Open Container Initiative format (OCI). In that way, your chart is saved in the same repository as your images. It is an experimental feature for now, but you can read up upon it (and instructions to try it out) in the [documentation](https://helm.sh/docs/topics/registries/#enabling-oci-support)
 
+### Extra (optional)
+
+This is the "Manual" way of doing a helm chart repo, and it has several downsides:
+
+* It stores all versions of your charts in a packaged (binary) file in your git repo, creating a large repository to clone over time.
+* It right now is manually done, so it needs to be CI'ed in a pipeline to become really usefull.
+
+But there is another way, using the [releaser](https://helm.sh/docs/howto/chart_releaser_action/) tool.
+
+The guide linked to describes how to use Chart Releaser Action to automate releasing charts through GitHub pages. Chart Releaser Action is a GitHub Action workflow to turn a GitHub project into a self-hosted Helm chart repo, using helm/chart-releaser CLI tool.
+
+Have a look at how to set this up.
+
 ### Credits
 
 This exercise has been adapted from a medium blogpost by [Ravindra Singh](https://medium.com/xebia-engineering/how-to-share-helm-chart-via-helm-repository-4cbfc7b1df90).
