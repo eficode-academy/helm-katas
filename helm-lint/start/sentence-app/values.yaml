@@ -1,0 +1,12 @@
+sentences:
+  replicas: 1
+  image:
+    repository: releasepraqma/sentence
+    tag: latest
+  service:
+    type: NodePort
+  resources:
+    requests:
+      cpu: 0.25
+    limits:
+      cpu: 0.25
