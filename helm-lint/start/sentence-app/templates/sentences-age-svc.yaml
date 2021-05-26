@@ -6,8 +6,8 @@ metadata:
     component: age
   name: age
 spec:
-ports:
-  - port: 8080
+  ports:
+  - pport: 8080
     protocol: TCP
     targetPort: 8080
   selector:
