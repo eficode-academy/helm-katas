@@ -15,7 +15,7 @@ cluster_machine_type = "n1-standard-4"
 Remember afterwards to run the following scripts
 in the following order:
 
-- `./wait_bastion_ready.sh && ./create-users.sh && ./start-vscode.sh`
+- `./wait_bastion_ready.sh && ./create-users.sh`
 
 After this, all training instances should have
-kubectl configured and vscode container started.
+kubectl configured.
