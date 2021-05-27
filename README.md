@@ -8,8 +8,10 @@ Natural progression:
 - hello-sentences-app.md
 - create-a-helm-chart.md
 - helm-chart-with-parameters.md
-- helm-and-helmsman.md
+- helm-chart-whitespace-pipelines-functions.md
+- helm-chart-conditionals-templates.md
 - test-helm-deployments.md
+- sharing-charts.md
 
 ## How to Read Exercise Files
 
