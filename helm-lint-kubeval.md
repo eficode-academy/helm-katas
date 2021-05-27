@@ -13,7 +13,7 @@ We are going to use two different tools here:
 - `helm lint` will lint your helm chart, catching mandatory fields not set in the helm objects, and YAML validate all your kubernetes objects with actions.
 - `helm kubeval` is a plugin to render your chart into kubernetes objects, and run `kubeval` on them. It performs the same as `helm lint` does, but for you kubernetes objects.
 
-So both tools help you, but with different scope.
+Both tools help you, but with different scope.
 
 ## Exercise
 
@@ -25,8 +25,7 @@ But we will provide a section with hints in :bulb:.
 
 The exercise resides in the `helm-lint/start` folder.
 
-- Try to deploy the helm chart and see what happens
-- Run `helm lint` to help you identify the problems.
+- Run `helm lint` to help you identify the problems of the chart.
 - Install the helm plugin [helm kubeval](https://artifacthub.io/packages/helm-plugin/kubeval/kubeval): `helm plugin install https://github.com/instrumenta/helm-kubeval`.
 - Run `helm kubeval` to help you investigate further.
 - Deploy the fixed chart
