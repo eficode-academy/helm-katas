@@ -10,6 +10,7 @@
 
 With the release of Helm3, the way Helm interacts with the kubernetes cluster has changed dramatically!
 
+
 ## Install and upgrade
 
 The `helm upgrade --install` command will create a release if it does not exist in the namespace, or will upgrade a release if a release by that name is found.
@@ -24,33 +25,40 @@ The `helm upgrade --install` command will create a release if it does not exist 
 
 This exercise assumes you are working in the `release-rollback/` folder.
 
-- In bullets, what are you going to solve as a student
+- Use the different non-deployment functionalities of helm to render kubernetes YAML.
+- Deploy the chart some times to create releases
+- Look at the history and secrets created
 
 ### Step by step instructions
-
-- `helm install --dry-run`
-- `helm template`
-- `helm upgrade --install myapp sentences-app/`
-- `helm upgrade --install myapp sentences-app/` again to see the different behaviour in output. 
-- `helm list` to see the releases
-- `kubectl get secrets` to see the releases as secrets files.
-- `kubectl describe secrets`
-- `helm rollback`
 
 <details>
 <summary>More Details</summary>
 
-**take the same bullet names as above and put them in to illustrate how far the student have gone**
+**Use the different non-deployment functionalities of helm to render kubernetes YAML**
 
-- all actions that you believe the student should do, should be in a bullet
+- `helm install --dry-run`
+- `helm template`
 
-> :bulb: Help can be illustrated with bulbs in order to make it easy to distinguish.
+**Deploy the chart some times to create releases**
+
+- `helm upgrade --install myapp sentence-app/`
+- `helm upgrade --install myapp sentence-app/` again to see the different behaviour in output. 
+- `helm list` to see the releases
+- `helm history myapp`
+- `helm get values myapp`
+- `helm upgrade --install myapp sentence-app/ --set=replicas=3`
+- `helm get values myapp`
+
+**Look at the history and secrets created**
+
+- `kubectl get secrets` to see the releases as secrets files.
+- `kubectl describe secrets sh.helm.release.v1.myapp.v2 `
+- `kubectl get secret sh.helm.release.v1.myapp.v2 -o jsonpath="{ .data.release }" | base64 -d | base64 -d | gunzip -c`
+- `helm rollback`
+- `helm history myapp`
 
 </details>
 
 ### Clean up
 
-If anything needs cleaning up, here is the section to do just t
-
-helm install mysite bitnami/drupal --set drupalUsername=admin
-helm list
+- `helm uninstall myapp`

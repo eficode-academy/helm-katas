@@ -1,0 +1,13 @@
+This info will be displayed when you either install or upgrade your release
+You can use actions in here like display the namespace it will be deployed to:
+{{ .Release.Namespace }}
+
+Or the example that helm.sh has:
+Thank you for installing {{ .Chart.Name }}.
+
+Your release is named {{ .Release.Name }}.
+
+To learn more about the release, try:
+
+  $ helm status {{ .Release.Name }}
+  $ helm get all {{ .Release.Name }}
