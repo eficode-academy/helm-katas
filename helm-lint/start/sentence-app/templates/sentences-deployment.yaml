@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: sentences
+    component: main
+  name: sentences
+spec:
+  replicas: {{ .Values.sentences.replicas }}
+  selector:
+    matchLabels:
+      app: sentences
+      component: main
+  template:
+    metadata:
+      labels:
+        app: sentences
+        component: main
+      annotations:
+        prometheus.io/scrape: 'true'
+        prometheus.io/port: '8080'
+        prometheus.io/path: '/metrics'
+    spec:
+      containers:
+      - image: {{ .Values.sentences.image.repository }}:{{ .Values.sentences.image.tag }}
+        imagePullPolicy: Always
+        name: sentences
+        args: [
+          '--age-service', 'http://age:8080',
+          '--name-service', 'http://name:8080'
+	    ]
+        resources:
+{{ toYaml .Values.sentences.resources | indent 10 }}
