@@ -6,18 +6,19 @@
 
 ## Helm linting and Kubeval plugin
 
-Linting and evaluating the kube objects that helm produces through kubeval can help you speed up you development of helm charts, by pointing towards your typos and indentation mistakes.
+Linting and evaluating the kubernetes objects that helm produces through `helm lint` and `kubeval` can help you speed up you development of helm charts, by catching your typos and indentation mistakes.
 
 We are going to use two different tools here:
 
-- `helm lint` will lint your helm chart, catching mandatory fields not set in the helm objects, and YAML validate all your kubernetes objects with actions.
-- `helm kubeval` is a plugin to render your chart into kubernetes objects, and run `kubeval` on them. It performs the same as `helm lint` does, but for you kubernetes objects.
+- `helm lint` will lint your helm chart, catching mandatory fields not set in the helm objects, and validate all of the YAML containing actions.
+- `helm kubeval` is a plugin to render your chart into kubernetes objects, and then run the `kubeval` kubernetes YAML linter on them. It functions similarly to `helm lint`, but for kubernetes objects.
 
-Both tools help you, but with different scope.
+Both tools help you, but with different scope, one for the template files themselves, and the other for the rendered templates.
 
 ## Exercise
 
-This exercise is deliberately made vague, with only the overview, and not step by step.
+This exercise is about using the linters to find mistakes in a chart we have prepared.
+Therefore there is no step by step walk through in this exercise, as you will have to use the tools to find the mistakes and fix them.
 
 But we will provide a section with hints in :bulb:.
 
@@ -49,7 +50,7 @@ The exercise resides in the `helm-lint/start` folder.
 <details>
 <summary> :bulb: Third hint</summary>
 
-> By now, helm lint should not give you any more errors, and you need to use helm kubeval. The error it gives you are aimed at the kubernetes objects. Therefore the mistypo in "port" should be fairly easy to spot in `sentence-app/templates/sentences-age-svc.yaml`
+> By now, helm lint should not give you any more errors, and you need to use helm kubeval. The error it gives you are aimed at the kubernetes objects. Therefore the typo in "port" should be fairly easy to spot in `sentence-app/templates/sentences-age-svc.yaml`
 
 </details>
 
