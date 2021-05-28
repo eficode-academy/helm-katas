@@ -315,7 +315,6 @@ spec:
 ```
 
 So that we can verify that the `nodePort` key is only added when the `type` is set to `NodePort`.
-:bulb: Notice that there is an extra newline generated. That is possible to be removed but removal has been left out for clarity.
 
 **Template resources map for deployments**
 
