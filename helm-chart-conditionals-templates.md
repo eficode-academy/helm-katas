@@ -594,12 +594,72 @@ Now if we do not specify any resource limitations, the defaults will be used, bu
 
 ### Extra Exercises
 
-If you have more time, or you want to practice using templates and conditionals then you can do the extra steps:
+If you have more time, or you want to practice using templates and conditionals a bit more then you can do the extra steps:
 
-<!-- <details> -->
-<!-- <summary>Extras</summart> -->
-<!-- </details> -->
+<details>
+<summary>Extras</summary>
+
+Now that we have created a parameterized, conditional template for the resources map of the deployments in our charts, let's also apply it to the two other deployments in the chart:
+
+- Change the `resources` map of the sentences-age and sentences-name deployments to use the template:
+
+By changing the:
+```
+      - ...
+        resources:
+          requests:
+            cpu: 0.25
+          limits:
+            cpu: 0.25
+```
+To:
+
+```yaml
+      - ...
+        {{- include "resources" .Values.sentences | nindent 8 }}
+```
+
+When you make the change you should use the values map of the two other deployments: `sentencesAge` and `sentencesName` instead of the `sentences` map in the when you pass the context to the template: `.Values.sentences`.
+
+> :bulb: Note that we use camel case for the deployment names when referencing the values object, as dashes `-` are not allowed in golang object names.
+
+- Render the templates and verify that the age and name deployments use the default values from the `resources` template.
+
+Now we can try to add some custom values to the `values.yaml` for the age and name deployments:
+
+- Add a map for the `sentencesAge` and `sentencesName` deployments in your values file:
+
+```yaml
+...
+
+sentencesAge:
+  resources:
+    requests:
+      cpu: 1.25
+      memory: "200Mi"
+    limits:
+      cpu: 1.50
+      memory: "1200Mi"
+
+sentencesName:
+  resources:
+    requests:
+      cpu: 2.25
+      memory: "500Mi"
+    limits:
+      cpu: 2.50
+      memory: "2200Mi"
+```
+
+- Render the template again, and note that all of the deployments should have different resources specifications.
+
+You can play around with setting some different values for each of the deployments.
+
+</details>
 
 ### Food for thought
 
+- When should you use conditionals?
 - When should you use templates in Helm?
+- What is a good scope for a template?
+- Can you make a chart too configurable?
