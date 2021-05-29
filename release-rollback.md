@@ -1,39 +1,42 @@
-# Helm release and rollback
+# Helm Release and Rollback
 
 ## Learning Goals
 
-- Learn the commands `install`,`upgrade` and `rollback`.
+- Learn the helm commands `install`,`upgrade` and `rollback`.
 - See the differences from `install --dry-run` and `helm template`
-- Learn how helm stores a release in kubernetes
+- Learn how helm stores a release in Kubernetes
 
 ## Introduction
 
-With the release of Helm3, the way Helm interacts with the kubernetes cluster has changed dramatically!
-Helm speaks directly with the cluster, and stores any state of the releases as kubernetes native objects.
+With the release of Helm3, the way Helm interacts with the Kubernetes cluster has changed dramatically!
+Helm speaks directly with the cluster, and stores any state of the releases as Kubernetes native objects.
 
-### Producing Kubernetes output
+### Producing Kubernetes Output
 
-Helm charts consists of kubernetes YAML with [go template](https://helm.sh/docs/chart_template_guide/functions_and_pipelines/) functionality.
-The more complex your templating get, the harder it can be to render the chart in your head to check that the outcome is right.
-For that, helm has two different commands:
+Helm charts consists of Kubernetes YAML with [golang template](https://helm.sh/docs/chart_template_guide/functions_and_pipelines/) functionality.
+The more complex your templating gets, the harder it can be to keep track of how the rendered YAML will look.
+To help you check that the YAML will render correctly Helm has two different commands:
 
-- `helm <install/upgrade> --dry-run` will produce the all the output (including the helm status), but redirect all kubernetes YAML to standard-out instead of sending it to the cluster.
-- `helm template` will only produce the kubernetes YAML, in the version that the helm client was compiled for.
+- `helm <install/upgrade> --dry-run` will produce the all the output (including the helm status), but redirect all Kubernetes YAML to standard-out instead of sending it to the cluster.
+- `helm template` will only produce the Kubernetes YAML, in the version that the helm client was compiled for.
 
-### Install and upgrade
+### Install and Upgrade
 
-Helm has two separate commands for installing a new release, or upgrading the release. The reason for this division is that in production, you would like to be sure that you only install a service if it is not there, or update it only if it is there.
+Helm has two separate commands for installing a new release, or upgrading existing release.
+The reason for this division is that in production, you would like to be sure that you only install a new service if it is not installed, and only update a service that is installed.
 
-If you do not want those guards, helm provides a parameter to helm upgrade:
-The `helm upgrade --install` command will create a release if it does not exist in the namespace, or will upgrade a release if a release by that name is found.
+If you do not want those guards, then you can simply use the `helm upgrade` command with the `--install` option.
+The `helm upgrade --install` command will create a release if it does not exist in the namespace, or upgrade a release if a release by that name is found.
 
 >:bulb: What will this upgrade change?
 > There is a helm plugin called [helm diff](https://artifacthub.io/packages/helm-plugin/diff/diff).
-> The helm plugin gives your a preview of what a helm upgrade would change. It basically generates a diff between the latest deployed version of a release and a helm upgrade --debug --dry-run. This can also be used to compare two revisions/versions of your helm release.
+> The helm diff plugin gives your a preview of what a helm upgrade would change.
+> It basically generates a diff between the latest deployed version of a release and a `helm upgrade --debug --dry-run`. This can also be used to compare two revisions/versions of your helm release.
 
 ### Rollbacks
 
-Each helm release will store a secret inside the namespace the given release has been deployed to. In that way, helm enables you to issue a rollback if the release is faulty in anyway.
+Each helm release will store a secret inside the namespace the given release has been deployed to, which contains data about the release.
+This enables, helm to issue a rollback if the release is faulty in any way.
 
 Now, if something does not go as planned during a release, it is easy to roll back to a previous release using `helm rollback [RELEASE] [REVISION]`.
 
@@ -54,33 +57,33 @@ We can use `helm history [RELEASE]` to see revision numbers for a certain releas
 This exercise assumes you are working in the `release-rollback/` folder.
 
 - Use the different non-deployment functionalities of helm to render kubernetes YAML.
-- Deploy the chart some times to create releases
+- Deploy the chart multiple times to create a revision history
 - Look at the history and secrets created
 
 ### Step by step instructions
 
-<details>
-<summary>More Details</summary>
+<!-- <details> -->
+<!-- <summary>More Details</summary> -->
 
 **Use the different non-deployment functionalities of helm to render kubernetes YAML**
 
-Let us start with seeing the difference between install --dry-run and template.
+Let us start with seeing the difference between `install --dry-run` and `template`.
 
 - Run install and observe the three parts of the output: `helm install --dry-run myapp sentence-app/`
 
-> :bulb: Can you find out where the NOTES: section of the output is generated from? 
+> :bulb: Can you find out where the NOTES: section of the output is generated from?
 
 - In order only to get the rendered kubernetes YAML, helm template will be a better fit: `helm template myapp sentence-app/`
 
-**Deploy the chart some times to create releases**
+**Deploy the chart multiple times to create a revision history**
 
-- Run `helm upgrade --install myapp sentence-app/` twice, and observe the different behaviour in output.
+- Run `helm upgrade --install myapp sentence-app/` _twice_, and observe the different behaviour in output.
 - Run `helm list` to see the release, and the revision state.
 - Run `helm history myapp` and look at the two revisions made. Output should look like below.
 
 ```sh
-$ helm history myapp 
-REVISION        UPDATED                         STATUS          CHART                   APP VERSION     DESCRIPTION     
+$ helm history myapp
+REVISION        UPDATED                         STATUS          CHART                   APP VERSION     DESCRIPTION
 1               Fri May 28 11:38:49 2021        superseded      sentence-app-0.1.0      1.16.0          Install complete
 2               Fri May 28 11:39:13 2021        deployed        sentence-app-0.1.0      1.16.0          Upgrade complete
 ```
@@ -95,6 +98,8 @@ REVISION        UPDATED                         STATUS          CHART           
 The reason is that none of our two upgrade commands took the values.yaml file as a parameter.
 
 </details>
+
+> :bulb: If do not have the `diff` plugin installed you can install it with: `$ helm plugin install https://github.com/databus23/helm-diff`
 
 - Run `helm diff upgrade myapp sentence-app -f values.yaml` to see what changes the values in `values.yaml` would have to out release.
 - Apply the values, run: `helm upgrade --install myapp sentence-app/ -f values.yaml` to create a new release with the values applied as well.
@@ -149,7 +154,7 @@ Now that we have seen how helm stores the data for a release, let us try to make
 
 > :bulb: why does a rollback create a new release?
 
-</details>
+<!-- </details> -->
 
 ### Clean up
 
