@@ -62,8 +62,8 @@ This exercise assumes you are working in the `release-rollback/` folder.
 
 ### Step by step instructions
 
-<!-- <details> -->
-<!-- <summary>More Details</summary> -->
+<details>
+<summary>More Details</summary>
 
 **Use the different non-deployment functionalities of helm to render kubernetes YAML**
 
@@ -154,7 +154,7 @@ Now that we have seen how helm stores the data for a release, let us try to make
 
 > :bulb: why does a rollback create a new release?
 
-<!-- </details> -->
+</details>
 
 ### Clean up
 
