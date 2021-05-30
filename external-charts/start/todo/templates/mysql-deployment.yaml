@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    io.kompose.service: mysql
+  name: mysql
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: mysql
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: mysql
+    spec:
+      containers:
+        - env:
+            - name: MYSQL_DATABASE
+              value: {{ .Values.mysql.dbName }}
+            - name: MYSQL_PASSWORD
+              value: {{ .Values.mysql.dbPassword }}
+            - name: MYSQL_ROOT_PASSWORD
+              value: {{ .Values.mysql.dbRootPassword }}
+            - name: MYSQL_USER
+              value: {{ .Values.mysql.dbUser }}
+          image: mysql:5.7
+          name: mysql
+          ports:
+            - containerPort: 3306
+          resources: {}
+      restartPolicy: Always
+status: {}

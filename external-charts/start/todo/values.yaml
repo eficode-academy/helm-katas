@@ -1,0 +1,17 @@
+todoApp:
+  mysqlHost: todo-mysql
+  mysqlDB: todos
+  mysqlUser: todos
+  mysqlPassword: todos
+  service:
+    name: todo-app
+    type: NodePort
+
+mysql:
+  dbName: todos
+  dbPassword: todos
+  dbUser: todos
+  dbRootPassword: todos
+  service:
+    name: todo-mysql
+    type: ClusterIP

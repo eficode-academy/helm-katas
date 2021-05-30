@@ -1,0 +1,12 @@
+name: todo
+description: A generated Helm Chart for todo from Skippbox Kompose
+version: 0.0.1
+apiVersion: v2
+keywords:
+  - todo
+sources:
+home:
+dependencies:
+  - repository: https://charts.bitnami.com/bitnami
+    name: mysql
+    version: 8.5.10
