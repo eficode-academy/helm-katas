@@ -1,5 +1,5 @@
 todoApp:
-  ## the host name of the service will be `<release name>-mysql`
+  ## the hostname of the service will be `<release name>-mysql`
   mysqlHost: my-todo-mysql
   mysqlDB: todos
   mysqlUser: todos

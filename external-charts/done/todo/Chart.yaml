@@ -6,7 +6,6 @@ keywords:
   - todo
 sources:
 home:
-
 dependencies:
   - repository: https://charts.bitnami.com/bitnami
     name: mysql
