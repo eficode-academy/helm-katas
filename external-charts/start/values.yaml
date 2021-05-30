@@ -1,3 +1,0 @@
-mongodb.auth.enabled: false
-#mongodb.service.nameOverride: "mongodb-service"
-mongodb.service.portName: "mongodb-service"

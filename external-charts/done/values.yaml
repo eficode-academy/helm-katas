@@ -1,8 +1,0 @@
-wordpressUsername: "admin"
-wordpressPassword: "SuperSecretPassw0rd"
-mariadb.auth.rootPassword: "SuperSecretDBPassw0rd"
-mariadb.auth.password: "SuperSecretDBPassw0rdAgain"
-resources:
-  limits:
-    memory: 512Mi
-    cpu: 300m

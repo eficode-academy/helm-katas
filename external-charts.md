@@ -7,6 +7,8 @@
 
 ## Introduction
 
+### Helm Chart Dependencies
+
 ## Exercise
 
 Add Bitnami PostgreSQL to your todo-mvc application
@@ -21,8 +23,9 @@ Add Bitnami PostgreSQL to your todo-mvc application
 
 ### Step-by-step
 
-<details>
-      <summary>More information</summary>
+TODO uncomment
+<!-- <details> -->
+<!-- <summary>More information</summary> -->
 
 **Install Bitnami Helm repo**
 
@@ -50,7 +53,8 @@ helm repo update
 
 **Install the new one**
 
-</details>
+TODO uncomment
+<!-- </details> -->
 
 ### Clean up
 
