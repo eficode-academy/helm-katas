@@ -1,0 +1,26 @@
+todoApp:
+  ## the hostname of the service will be `<release name>-mysql`
+  mysqlHost: my-todo-mysql
+  mysqlDB: todos
+  mysqlUser: todos
+  mysqlPassword: todos
+  service:
+    name: todo-app
+    type: LoadBalancer
+
+mysql:
+  image:
+    tag: 5.7
+  auth:
+    rootPassword: todos
+    database: todos
+    username: todos
+    password: todos
+  primary:
+    resources:
+      requests:
+        cpu: 0.25
+        memory: "250Mi"
+      limits:
+        cpu: 1.0
+        memory: "1000Mi"

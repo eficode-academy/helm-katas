@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    io.kompose.service: todo-app
+  name: todo-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: todo-app
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: todo-app
+    spec:
+      containers:
+        - env:
+            - name: MYSQL_HOST
+              value: {{ .Values.todoApp.mysqlHost }}
+            - name: MYSQL_DB
+              value: {{ .Values.todoApp.mysqlDB }}
+            - name: MYSQL_USER
+              value: {{ .Values.todoApp.mysqlUser }}
+            - name: MYSQL_PASSWORD
+              value: {{ .Values.todoApp.mysqlPassword }}
+          image: releasepraqma/todo-app
+          name: todo-app
+          ports:
+            - containerPort: 3000
+          resources: {}
+      restartPolicy: Always
+status: {}
