@@ -14,6 +14,11 @@ Similarly with helm, we can use off-the-shelf charts for things like databases a
 
 This is done by declaring external charts as dependencies in our `Chart.yaml` or by pulling them down manually and placing them in the `charts/` directory of our own chart.
 
+We will be using the [Bitnami mysql](https://artifacthub.io/packages/helm/bitnami/mysql) helm chart in the exercise.
+
+We want to use an external chart to install the database, because it means we do not have to worry about the implementation of the mysql templates.
+We can instead focus on developing our own application, and use off-the-shelf charts for any external dependencies we might have.
+
 You can read more about chart depenencies in the [documentation](https://helm.sh/docs/topics/charts/#chart-dependencies).
 
 ## Exercise
@@ -21,8 +26,12 @@ You can read more about chart depenencies in the [documentation](https://helm.sh
 In this exercise we will be using an example todo application (originally from docker [getting started](https://github.com/eficode-academy/getting-started)) to show how you can use external charts as dependencies for your own Helm charts.
 
 The example application is simple todo list.
-It consists of a node application that serves the frontend and stores the todo items in a mysql datatbase.
-The example chart we have created thus contains two deployments and two services.
+It consists of a node application that serves the frontend and stores the todo items in a mysql database.
+The example chart we have created thus contains two deployments and two services:
+
+The two deployments are one for the `todo application` and one for a `mysql database`.
+
+As well as two services to handle networking, a `ClusterIP` for the mysql database and a `NodePort` for the todo application.
 
 We will start by deploying the example todo application with all custom Kubernetes yaml, and then modify the chart to use the `bitnami/mysql` chart as a dependency, instead of our custom mysql deployment.
 
@@ -50,10 +59,6 @@ If you get stuck, or you want to see how the finished chart looks, a completed v
 
 Let's start by deploying the basic version of the todo application chart.
 
-The basic version of the chart contains two deployments, one for the `todo application` and one for a `mysql database`.
-
-As well as two services to handle networking, a `ClusterIP` for the mysql database and a `NodePort` for the todo application.
-
 - Deploy the application:
 ```sh
 $ cd helm-katas/external-charts/start
@@ -74,11 +79,6 @@ Play around with the application for a moment, add some items, delete some items
 
 Once you are confident that the application works, we then proceed to using a chart dependency instead of our custom deployment to install the mysql database.
 
-We will be using the [Bitnami mysql](https://artifacthub.io/packages/helm/bitnami/mysql) helm chart.
-
-We want to use an external chart to install the mysql database, because it means we do not have to worry about the implementation of the mysql templates.
-We can instead focus on developing our own application, and use off-the-shelf charts for any external dependencies we might have.
-
 **Install Bitnami chart repository**
 
 In order to install a chart from the Bitnami chart repository, we have to `install` it in our local Helm client.
@@ -92,7 +92,8 @@ $ helm repo add bitnami https://charts.bitnami.com/bitnami
 $ helm repo update
 ```
 
-You can verify that the repository was installed with:
+- Verify that the repository was installed:
+
 ```sh
 $ helm repo list
 NAME   	URL
@@ -106,15 +107,17 @@ Let's try to pull down the `bitnami/mysql` chart so that we can inspect it.
 The chart can be found either on [artifacthub.io](https://artifacthub.io/packages/helm/bitnami/mysql) or on [Bitnami's own website](https://bitnami.com/stack/mysql), where we can read about the chart, and all of the different values that we might want to customize.
 
 - Pull the repository down:
+
 ```sh
 $ helm pull bitnami/mysql --untar
 ```
+
 > :bulb: Helm charts are stored as compressed tar archives, therefore when you pull a chart, you will get the tar file.
 > We can use the `--untar` option to automatically unpack the archive such that we can inspect its contents.
 
 You should now have a directory named `mysql`, which contains the helm chart.
 
-Take a moment to inspect the different files in the chart, especially the `values.yaml` and how the values are propagated to the different `templates`.
+- Take a moment to inspect the different files in the chart, especially the `values.yaml` and how the values are propagated to the different `templates`.
 
 - Once you are satisfied that the helm chart looks good, go ahead and delete the `mysql` directory that was created.
 
@@ -122,9 +125,9 @@ Take a moment to inspect the different files in the chart, especially the `value
 $ rm -rf mysql
 ```
 
-Pulling down charts and unpacking them is useful for inspecting them before use.
-Charts pulled down and placed in the `charts/` directory are used as subcharts.
-If you want to do a lot of customization to a subchart, unpacking it can be the easiest way to do so, as you will have all of the files available.
+> Note: Pulling down charts and unpacking them is useful for inspecting them before use.
+> Charts pulled down and placed in the `charts/` directory are used as subcharts.
+> If you want to do a lot of customization to a subchart, unpacking it can be the easiest way to do so, as you will have all of the files available.
 
 In this case we do not want to customize any of the templates of the mysql chart, just pass some custom values, in order to make our own chart simpler.
 
@@ -258,6 +261,8 @@ todoApp:
 
 **Upgrade your installed release**
 
+- See the differences that the change will make in kubernetes YAML with the helm diff plugin: `helm diff upgrade my-todo todo/`
+
 - Upgrade your installation with the changes we have made:
 
 ```sh
@@ -280,6 +285,8 @@ Now we wait a moment for the new resources to be deployed to the cluster.
 Now go back to your browser and navigate to the todo application endpoint.
 
 The application should still be running, but all of the todo entries should be gone, as we have now connected to the new database.
+
+> Note: the reason why all data is gone is because the initial version of MySQL we made, did not have any persistent volume. The Bitnami Chart however uses that, so new database application upgrades is doable while still keeping the application data.
 
 Play around with the application again, and verify that the application is working correctly with the new database.
 
