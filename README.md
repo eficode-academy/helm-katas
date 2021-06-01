@@ -1,17 +1,22 @@
-# helm-katas
+# Helm katas
+
+A set of Helm exercises actively used by [Eficode Academy](https://www.eficode.com/academy)
 
 ## Overview of exercises
 
 Natural progression:
 
-- intro-to-helm-package-manager.md
-- hello-sentences-app.md
-- create-a-helm-chart.md
-- helm-chart-with-parameters.md
-- helm-chart-whitespace-pipelines-functions.md
-- helm-chart-conditionals-templates.md
-- test-helm-deployments.md
-- sharing-charts.md
+- [Intro to helm package manager](intro-to-helm-package-manager.md)
+- [Hello sentences app](hello-sentences-app.md)
+- [Create a helm chart](create-a-helm-chart.md)
+- [Helm release and rollback](release-rollback.md)
+- [Helm chart with parameters](helm-chart-with-parameters.md)
+- [Helm Chart Whitespace Handling, Pipelines and Functions](helm-chart-whitespace-pipelines-functions.md)
+- [Helm Chart Conditionals and Templates](helm-chart-conditionals-templates.md)
+- [Helm lint and kubeval](helm-lint-kubeval.md)
+- [Testing Helm Deployments](test-helm-deployments.md)
+- [Sharing charts](sharing-charts.md)
+- [External charts](external-charts.md)
 
 ## How to Read Exercise Files
 
