@@ -253,7 +253,7 @@ $ touch sentence-app/values.yaml
 ```yaml
 sentences:
   replicas: 2
-  repository: releasepraqma/sentences
+  repository: releasepraqma/sentence
   tag: latest
 ```
 
@@ -328,7 +328,7 @@ In order to render our newly edited deployment templates we have to also provide
 ```yaml
 sentences:
   replicas: 2
-  repository: releasepraqma/sentences
+  repository: releasepraqma/sentence
   tag: latest
 
 sentencesAge:

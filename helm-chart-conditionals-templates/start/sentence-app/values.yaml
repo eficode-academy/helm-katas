@@ -1,6 +1,6 @@
 sentences:
   replicas: 2
-  repository: releasepraqma/sentences
+  repository: releasepraqma/sentence
   tag: latest
   resources:
     requests:
