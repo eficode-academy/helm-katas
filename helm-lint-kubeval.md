@@ -2,7 +2,8 @@
 
 ## Learning Goals
 
-- provide a list of goals to learn here
+- Debug helm chart through `helm lint`
+- Debug kubernetes objects renderes through helm with the `helm kubeval` plugin
 
 ## Helm linting and Kubeval plugin
 
