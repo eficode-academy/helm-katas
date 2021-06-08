@@ -3,6 +3,8 @@
 ## Learning Goals
 
 - Use Helm control flow and conditionals
+- Use if statements
+- Use equality operators
 
 ## Introduction
 
