@@ -18,7 +18,7 @@ Helm has support for templating chunks of code that you want to reuse.
 
 Named templates are defined with the `define` action and the name of the template, and delimited with an `end`:
 
-```
+```yaml
 {{ define "myFirstTemplate" }}
 foo: bar
 {{ end }}
@@ -32,7 +32,7 @@ Named templates are injected into your yaml with the `template` action and the n
 
 A named templates can have it's own values, but these must be injected when calling the template.
 
-```
+```yaml
 {{ define "myTemplateWithArgs" }}
 foo: {{ .Values.bar }}
 {{ end }}
@@ -69,7 +69,7 @@ When using `include` you must specify the context for the template to use: `{{ i
 
 In this exercise we will create a named template to default the resource requests and limits for our deployments.
 
-Then we will conditionally override the defaults by using a each of the deployments contextual resource definitions.
+Then we will conditionally override the defaults by using each of the deployments contextual resource definitions.
 
 ### Overview
 
@@ -93,14 +93,15 @@ Now we would like to have a sensible default for our pod resources, with the abi
 
 To do this we will use a `named template`.
 
-Let's create a template file:
+- Let's create a template file:
 
 ```sh
 touch sentence-app/templates/_helpers.tpl
 ```
+
 > :bulb: You can create the file in any way you want, it just has to be placed in the `templates` directory.
 
-Open the file in your text editor and the following code:
+- Open the file in your text editor and add the following code:
 
 ```yaml
 {{- define "resources" -}}
@@ -116,7 +117,9 @@ resources:
 
 This is just a simple template that will insert the above yaml map.
 
-Let's use it in your sentences deployment, edit the file `sentence-app/templates/sentences-deployment.yaml` and change:
+Let's use it in your sentences deployment.
+
+- edit the file `sentence-app/templates/sentences-deployment.yaml` and change:
 
 ```yaml
 apiVersion: apps/v1
@@ -149,7 +152,7 @@ spec:
         {{ template "resources" }}
 ```
 
-Render the template:
+- Render the template:
 
 ```sh
 helm template sentence-app --show-only templates/sentences-deployment.yaml
@@ -176,7 +179,10 @@ spec:
 
 So far so good, but we have to fix the indentation.
 
-In order to that we will change the `template` to an `include` in your sentences deployment, so that we can use a pipeline and the `nindent` function:
+In order do to that we will change the `template` to an `include` in your sentences deployment.
+By doing that we can use a pipeline and the `nindent` function.
+
+- Change the content of the deployment to the following:
 
 ```yaml
 apiVersion: apps/v1
@@ -194,7 +200,7 @@ spec:
 
 > :bulb: Also notice that we use `{{-` to remove whitespace before the template is injected.
 
-Render the template again:
+- Render the template again:
 
 ```sh
 helm template sentence-app --show-only templates/sentences-deployment.yaml
@@ -223,9 +229,11 @@ There we go!
 
 **Conditionally override the template**
 
-But now our sentences deployment will always use the resources map specified in the template, so lets add a condition so that we can override it:
+But now our sentences deployment will always use the resources map specified in the template.
 
-Edit your `_helpers.tpl` and add the following if statement below the `define` line:
+Let us add a condition so that we can override it:
+
+- Edit your `_helpers.tpl` and add the following if statement below the `define` line:
 
 ```yaml
 ...
@@ -236,7 +244,7 @@ resources:
 ...
 ```
 
-We also need to add a `{{- end -}}` to delimit the `if` statement:
+- Add a `{{- end -}}` to delimit the `if` statement:
 
 ```yaml
     ...
@@ -244,6 +252,7 @@ We also need to add a `{{- end -}}` to delimit the `if` statement:
 {{- end -}}
 {{- end -}}
 ```
+
 > :bulb: We end up having two `{{- end -}}` at the end of the file because we have to delimit both the template `define` and the `if` statement.
 
 The final `_helpers.tpl` should look like this:
@@ -271,7 +280,7 @@ This means that if the context indeed contains a `resources` map, then it will b
 
 Next we edit our sentences deployment to pass the `.Values.sentences` context to the template:
 
-Change:
+- Change:
 
 ```yaml
 apiVersion: apps/v1
@@ -305,6 +314,7 @@ spec:
 
 Since we defined a `resources` map in the `values.yaml` a few exercises ago, when we render the template we should see these values being used instead of the template one:
 
+- Render the template:
 
 ```sh
 helm template sentence-app --show-only templates/sentences-deployment.yaml
@@ -329,7 +339,7 @@ spec:
             memory: 100Mi
 ```
 
-You can try to delete the `resources` map from your `values.yaml` and render the template again:
+- You can try to delete the `resources` map from your `values.yaml` and render the template again:
 
 ```sh
 helm template sentence-app --show-only templates/sentences-deployment.yaml
