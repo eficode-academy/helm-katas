@@ -1,0 +1,16 @@
+k8sIsAwesome: true
+
+myValue: foo
+myOtherValue: bar
+
+myMap:
+  outerKey:
+    innerKey: "someValue"
+
+mySlice:
+  - "foo"
+  - "bar"
+  - "fubar"
+
+myApp:
+  appName: myAwesomeApp

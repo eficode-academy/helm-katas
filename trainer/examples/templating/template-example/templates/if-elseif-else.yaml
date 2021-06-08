@@ -1,0 +1,10 @@
+myYaml:
+    {{- if .Values.myValue }}
+    myValuePresent: true
+    {{- else if .Values.myOtherValue }}
+    myOtherValuePresent: true
+    {{- else }}
+    noValuePresent: true
+    myValuePresent: false
+    myOtherValuePresent: false
+    {{- end }}

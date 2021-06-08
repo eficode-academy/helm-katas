@@ -1,0 +1,5 @@
+myYaml:
+  myValue: foo
+  myMap:
+
+        {{- .Values.myMap | toYaml | nindent 4 }}

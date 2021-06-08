@@ -1,0 +1,11 @@
+{{- define "myTemplate2" -}}
+appName: {{ .Values.myApp.appName }}
+{{- end }}
+
+{{- define "myContextualTemplate" -}}
+contextualAppName: {{ .appName }}
+{{- end }}
+
+myYaml:
+  {{ template "myTemplate2" . }}
+  {{ template "myContextualTemplate" .Values.myApp }}
