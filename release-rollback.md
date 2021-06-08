@@ -54,8 +54,6 @@ We can use `helm history [RELEASE]` to see revision numbers for a certain releas
 
 ### Overview
 
-This exercise assumes you are working in the `release-rollback/` folder.
-
 - Use the different non-deployment functionalities of helm to render kubernetes YAML.
 - Deploy the chart multiple times to create a revision history
 - Look at the history and secrets created
@@ -66,6 +64,8 @@ This exercise assumes you are working in the `release-rollback/` folder.
 <summary>More Details</summary>
 
 **Use the different non-deployment functionalities of helm to render kubernetes YAML**
+
+- Navigate to the folder with the exercise content `cd release-rollback`
 
 Let us start with seeing the difference between `install --dry-run` and `template`.
 

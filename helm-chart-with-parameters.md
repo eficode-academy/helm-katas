@@ -232,6 +232,11 @@ spec:
         ...
 ```
 
+Install the release to your cluster in order to verify that the image and tag used are rendered correct.
+
+- `helm install sentences sentence-app/ --set sentences.replicas=2 --set sentences.repository=releasepraqma/sentence --set sentences.tag=latest`
+- Verify that the deployment is healthy with `kubectl get deployments`
+
 You can try a few different values for the repository and tag if you want.
 
 **Create values file**
