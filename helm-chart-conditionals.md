@@ -121,7 +121,7 @@ First let's have a look at the sentences service template, the file is located i
 
 The type and ports for the service are hard-coded in the service template.
 
-Let's make the type a parameter:
+- Let's make the type a parameter:
 
 ```yaml
 apiVersion: v1
@@ -132,7 +132,8 @@ spec:
   type: {{ .Values.sentences.service.type }}
 ```
 
-Add the type to your `values.yaml`:
+- Add the type to your `values.yaml`:
+
 ```yaml
 sentences:
   ...
@@ -140,7 +141,7 @@ sentences:
     type: ClusterIP
 ```
 
-Let's try to render the service template:
+- Let's try to render the service template:
 
 ```sh
 $ helm template sentence-app --show-only templates/sentences-svc.yaml
@@ -155,9 +156,10 @@ spec:
 ```
 
 Sweet, that works.
-Let's try to change the `type` in your `values.yaml` to `NodePort`.
 
-Render the template again, and verify that it is now set to `NodePort`.
+- Let's try to change the `type` in your `values.yaml` to `NodePort`.
+
+- Render the template again, and verify that it is now set to `NodePort`.
 
 **Conditionally specify which nodePort to use**
 
@@ -166,7 +168,7 @@ This argument is only relevant when using the `NodePort` service type, so let's 
 
 > :bulb: Note the difference in case for `NodePort` and `nodePort`.
 
-Add the port to your `values.yaml`:
+- Add the port to your `values.yaml`:
 
 ```yaml
 sentences:
@@ -176,7 +178,7 @@ sentences:
     nodePort: 31234
 ```
 
-We add the conditional to the `ports` map of the service spec in your sentences service template:
+- Add the conditional to the `ports` map of the service spec in your sentences service template:
 
 ```yaml
 apiVersion: v1
@@ -198,7 +200,7 @@ spec:
 
 Now the `nodePort` key will be inserted if the key is set.
 
-Render the template:
+- Render the template:
 
 ```sh
 helm template sentence-app --show-only templates/sentences-svc.yaml
@@ -217,7 +219,7 @@ spec:
   ...
 ```
 
-Try to comment out the `nodePort` in your values file and render the template again:
+- Try to comment out the `nodePort` in your values file and render the template again:
 
 ```yaml
 sentences:
@@ -245,7 +247,7 @@ spec:
   ...
 ```
 
-Uncomment the `nodePort` line in your values file.
+- Uncomment the `nodePort` line in your values file.
 
 **Only insert the nodePort if service type is NodePort**
 
@@ -277,7 +279,7 @@ When we put it all together we get an if statement, where the condition is the `
 
 Thus only when both conditions are met, the value will be inserted.
 
-* Edit your service file with the new if statement:
+- Edit your service file with the new if statement:
 
 ```yaml
 apiVersion: v1
@@ -295,7 +297,7 @@ spec:
   type: {{ .Values.sentences.service.type }}
 ```
 
-Try to render the template:
+- Try to render the template:
 
 ```sh
 $ helm template sentence-app --show-only templates/sentences-svc.yaml
@@ -314,7 +316,7 @@ spec:
   type: NodePort
 ```
 
-Now let's try to change the type back to `ClusterIP` in the values file, and render the template again:
+- Try to change the type back to `ClusterIP` in the values file, and render the template again:
 
 ```sh
 $ helm template sentence-app --show-only templates/sentences-svc.yaml
