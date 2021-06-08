@@ -24,6 +24,7 @@ Helm uses `go templates` under the hood, which enables powerful text templating 
 Values are parameterized in Helm by replacing the value you want to parameterize with `{{ .Values.<valueName> }}`.
 
 For example, if we have a deployment that species the number of replicas:
+
 ```yaml
 apiVersion: apps/v1
 kind: Deployment
@@ -105,6 +106,13 @@ There are two main ways for specifying the values that Helm should use when rend
 
 The imperative approach is good for experiments or one off commands, while the declarative approach is good for repeatable installations and upgrades.
 
+By convention the default values file is named `values.yaml`, and will be included automatically.
+You can add custom values files by using the `--values` option.
+
+```sh
+$ helm install my-chart my-chart/ --values myValues.yaml
+```
+
 ## Exercise
 
 In this exercise we will add parameters to the sentences deployment, the "frontend" so to speak of the sentences application.
@@ -137,6 +145,8 @@ Let start by parameterizing the replicas.
 This key is currently not in the deployment specification, so we have to add it.
 
 - add `replicas: {{ .Values.sentences.replicas }}` to the yaml:
+
+> :bulb: The replicas key is not there by default, so you must add it to the outermost `spec` map.
 
 ```yaml
 apiVersion: apps/v1
@@ -502,13 +512,3 @@ spec:
 ```
 
 </details>
-
-## Cleanup
-
-Uninstall the sentences chart:
-
-```sh
-$ helm uninstall sentences
-```
-
-> :bulb: In this example, sentences is the release name, yours maybe different, you can find the name of your release with the `helm ls` command.

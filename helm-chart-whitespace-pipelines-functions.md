@@ -89,6 +89,14 @@ We assume that `myString=FooBar`, thus the result of the function will be `shoul
 >
 > [Full list of available functions](https://helm.sh/docs/chart_template_guide/function_list/)
 
+##### Custom Functions
+
+Helm is distributed as a static binary, so it only includes the functions that the binary was compiled with.
+
+If you need to use custom functions, you can 'attach' an external binary as a post-renderer, which will run on the templates after helm has templated them, but before installing them.
+
+[Post rendering documentation](https://helm.sh/docs/topics/advanced/#post-rendering)
+
 ### Helm Pipelines
 
 Pipelines allow us to use the output of one function as the input of another function:

@@ -433,7 +433,7 @@ If you are not sure how regex works, then don't worry, the important part is tha
 
 We could verify the regex using shell commands, but that can get messy and hard to maintain, so let's use a programming language to write our test in.
 
-The golang code is located in `helm-test/sentence-regex-test/sentence_regex.go`, but the implementation is not important for the purpose of this exercise.
+The golang code is located in `test-helm-deployments/sentence-regex-test/sentence_regex.go`, but the implementation is not important for the purpose of this exercise.
 The program will return an exit code 0 if the regex matches, and 1 if it does not.
 
 </details>
