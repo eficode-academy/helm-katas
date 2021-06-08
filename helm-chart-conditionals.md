@@ -119,30 +119,6 @@ If you get stuck, or you want to see how the final chart looks, there is a solve
 
 First let's have a look at the sentences service template, the file is located in `sentence-app/templates/sentences-svc.yaml`
 
-<details>
-<summary>Default sentences-svc.yaml</summary>
-
-```yaml
-apiVersion: v1
-kind: Service
-metadata:
-  labels:
-    app: sentences
-    component: main
-  name: sentence
-spec:
-  ports:
-  - port: 8080
-    protocol: TCP
-    targetPort: 8080
-  selector:
-    app: sentences
-    component: main
-  type: NodePort
-```
-
-</details>
-
 The type and ports for the service are hard-coded in the service template.
 
 Let's make the type a parameter:
