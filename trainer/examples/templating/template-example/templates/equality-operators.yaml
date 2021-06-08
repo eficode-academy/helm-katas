@@ -1,0 +1,8 @@
+myYaml:
+    {{- if eq .Values.myValue "foo" }}
+    myValueIsFoo: true
+    {{- end }}
+    {{- if and .Values.myValue (.Values.myOtherValue | lower | ne "bar") }}
+    myValueIsPresent: true
+    myOtherValueIsBar: false
+    {{- end }}

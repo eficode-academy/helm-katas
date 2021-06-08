@@ -1,0 +1,5 @@
+myYaml:
+    myValue: foo
+    {{- if .Values.k8sIsAwesome }}
+    myOtherValue: bar
+    {{- end }}
