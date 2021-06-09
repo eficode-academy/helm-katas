@@ -37,6 +37,7 @@ sentences-svc.yaml
 
 ### Overview
 
+- Running the sentences application on Kubernetes
 - Create a skeleton Helm chart
 - Copy `sentences` kubernetes yaml into the chart
 - Lint and deploy our new chart
@@ -45,6 +46,65 @@ sentences-svc.yaml
 
 <details>
       <summary>More details</summary>
+
+**Deploy the sentences application to Kubernetes**
+
+First, let's run the application in bare Kubernetes to see that our YAML is right.
+
+- `kubectl apply -f sentences-app/deploy/kubernetes`
+
+This will create three microservice deployments
+with a single POD instance each.
+
+**Test the deployed application**
+
+- `kubectl get pods`
+
+> :bulb: The front-end microservice for the
+> sentences application is exposed with a
+> Kubernetes service of type `NodePort`.
+
+When all three PODs are in a running state, look
+up the actual NodePort used by the frontend
+microservice:
+
+- `kubectl get svc sentence`
+
+Output:
+
+```shell
+NAME        TYPE       CLUSTER-IP      EXTERNAL-IP   PORT(S)          AGE
+sentences   NodePort   10.15.245.208   <none>        8080:30250/TCP   37s
+```
+
+In the example above, the relevant NodePort is
+`30250`.
+
+- look up an external accessible IP address that
+  can be used to access the front-end
+  microservice.
+
+- `kubectl get nodes -o wide`
+
+Any of the IP addresses from the
+`EXTERNAL-IP`-column can be used.
+
+To request a sentence from the sentences
+application, use curl with the external IP address
+and `NodePort` found above:
+
+- `curl <EXTERNAL-IP>:30250`
+
+Output:
+
+```shell
+John is 73 years
+```
+
+> :bulb: in the above example `30250` should be
+> changed with your nodeport found above
+
+- Clean up the application deployed with `kubectl delete -f sentences-app/deploy/kubernetes/`
 
 **Create a skeleton Helm chart**
 
