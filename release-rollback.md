@@ -156,6 +156,21 @@ Now that we have seen how helm stores the data for a release, let us try to make
 
 </details>
 
+## Extra: 3 way merge
+3-way merges and hand-edited releases.
+
+
+
+This is not always what happens when you use a strategic merge patch on a list. In some cases, the list is replaced, not merged.
+
+The strategic-merge approach attempts to “do the right thing” when combining the provided spec with the existing spec. More specifically, it attempts to merge both objects and arrays, meaning changes tend to be additive. For example, providing a patch that contains a single, new environment variable in a pod container spec results in that environment variable being added to the existing environment variables, not overwriting them. To delete a property with this approach, you need to specifically set its value to null in the provided spec. 
+
+With a strategic merge patch, a list is either replaced or merged depending on its patch strategy. The patch strategy is specified by the value of the patchStrategy key in a field tag in the Kubernetes source code. You can also see it in the [Kubernetes API documentation](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.21/#podspec-v1-core) under `patch strategy`.
+
+
+> :bulb: credit to [this awesome blogpost](https://blog.atomist.com/kubernetes-apply-replace-patch/) for invaluable way of explaining this complex part of Kubernetes and Helm.
+
+
 ### Clean up
 
 - `helm uninstall myapp`
