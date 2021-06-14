@@ -93,7 +93,7 @@ To request a sentence from the sentences
 application, use curl with the external IP address
 and `NodePort` found above:
 
-- `curl <EXTERNAL-IP>:30250`
+- `curl <EXTERNAL-IP>:<NodePort>`
 
 Output:
 
@@ -101,7 +101,7 @@ Output:
 John is 73 years
 ```
 
-> :bulb: in the above example `30250` should be
+> :bulb: in the above example `NodePort` should be
 > changed with your nodeport found above
 
 - Clean up the application deployed with `kubectl delete -f sentences-app/deploy/kubernetes/`
@@ -218,6 +218,17 @@ In our case this will be identical to the YAML
 files we copied previously since we haven't
 provided any means of customizing the application
 installation.
+
+Try to reach it again like we did with the raw kubernetes objects application to begin with.
+
+- Note down the NodePort from the service `kubernetes get svc`
+- `curl <EXTERNAL-IP>:<NodePort>` and see that your application is running once again.
+
+Output:
+
+```shell
+John is 47 years
+```
 
 </details>
 
