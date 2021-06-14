@@ -170,6 +170,37 @@ With a strategic merge patch, a list is either replaced or merged depending on i
 
 > :bulb: credit to [this awesome blogpost](https://blog.atomist.com/kubernetes-apply-replace-patch/) for invaluable way of explaining this complex part of Kubernetes and Helm.
 
+## Exercise:
+
+Helm install the chart
+Add new label to podspec template
+kubectl apply
+Helm upgrade with the original one
+Observe that label is still there.
+change value of label component to years
+
+### History
+helm install myapp sentence-app/
+  kubectl get pods
+Add a label to deployment
+  kubectl apply -f sentence-app/templates/sentences-age-deployment.yaml 
+  helm ls
+  kubectl describe deployments.apps sentence-age 
+  `helm upgrade myapp sentence-app/` back to the old one
+  See that it is persisted. `kubectl describe deployments.apps sentence-age`
+
+  helm upgrade myapp sentence-app/
+ 2019  kubectl describe deployments.apps sentence-age 
+ 2020  kubectl apply -f sentence-app/templates/sentences-age-deployment.yaml 
+ 2021  kubectl describe deployments.apps sentence-age 
+ 2022  helm upgrade myapp sentence-app/
+ 2023  kubectl describe deployments.apps sentence-age 
+ 2024  kubectl apply -f sentence-app/templates/sentences-age-deployment.yaml 
+ 2025  helm upgrade myapp sentence-app/
+ 2026  kubectl describe deployments.apps sentence-age 
+ 2027  helm upgrade myapp sentence-app/
+ 2028  kubectl describe deployments.apps sentence-age 
+
 
 ### Clean up
 
