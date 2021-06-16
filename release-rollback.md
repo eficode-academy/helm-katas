@@ -156,51 +156,62 @@ Now that we have seen how helm stores the data for a release, let us try to make
 
 </details>
 
-## Extra: 3 way merge
-3-way merges and hand-edited releases.
+## Extra: 3-way merges and hand-edited releases
 
+When doing rollbacks and upgrades, Helm3 tries to perform a 3 way _strategic_ merge.
 
+The three states it takes are:
 
-This is not always what happens when you use a strategic merge patch on a list. In some cases, the list is replaced, not merged.
+- The latest revision state of the release stored in the Helm secret.
+- The current "live" versions of the Kubernetes objects running in the cluster.
+- The new revision either being upgraded to or rolled back.
 
-The strategic-merge approach attempts to “do the right thing” when combining the provided spec with the existing spec. More specifically, it attempts to merge both objects and arrays, meaning changes tend to be additive. For example, providing a patch that contains a single, new environment variable in a pod container spec results in that environment variable being added to the existing environment variables, not overwriting them. To delete a property with this approach, you need to specifically set its value to null in the provided spec. 
+If the live state has added something to the objects, Helm tries to add them to the new revision as well. If something has changed, say an environment variable, it will be overwritten to the revision currently getting applied.
 
-With a strategic merge patch, a list is either replaced or merged depending on its patch strategy. The patch strategy is specified by the value of the patchStrategy key in a field tag in the Kubernetes source code. You can also see it in the [Kubernetes API documentation](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.21/#podspec-v1-core) under `patch strategy`.
+<details>
+<summary>:bulb: More information on merge strategies.</summary>
+
+The strategic-merge approach attempts to “do the right thing” when combining the provided spec with the existing spec. More specifically, it attempts to merge both objects and arrays, meaning changes tend to be additive. For example, providing a patch that contains a single, new environment variable in a pod container spec results in that environment variable being added to the existing environment variables, not overwriting them. To delete a property with this approach, you need to specifically set its value to null in the provided spec.
+
+With a strategic merge, a list is either replaced or merged depending on its patch strategy. The patch strategy is specified by the value of the patchStrategy key in a field tag in the Kubernetes source code. You can also see it in the [Kubernetes API documentation](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.21/#podspec-v1-core) under `patch strategy`.
+
+</details>
 
 
 > :bulb: credit to [this awesome blogpost](https://blog.atomist.com/kubernetes-apply-replace-patch/) for invaluable way of explaining this complex part of Kubernetes and Helm.
 
-## Exercise:
+## Exercise
 
-Helm install the chart
-Add new label to podspec template
-kubectl apply
-Helm upgrade with the original one
-Observe that label is still there.
-change value of label component to years
+### Overview
 
-### History
-helm install myapp sentence-app/
-  kubectl get pods
-Add a label to deployment
-  kubectl apply -f sentence-app/templates/sentences-age-deployment.yaml 
-  helm ls
-  kubectl describe deployments.apps sentence-age 
-  `helm upgrade myapp sentence-app/` back to the old one
-  See that it is persisted. `kubectl describe deployments.apps sentence-age`
+- Helm install the chart
+- Add new label to podspec template and apply
+- Helm upgrade with the original one
+- Change value of existing label and apply
+- Helm upgrade with the original one
 
-  helm upgrade myapp sentence-app/
- 2019  kubectl describe deployments.apps sentence-age 
- 2020  kubectl apply -f sentence-app/templates/sentences-age-deployment.yaml 
- 2021  kubectl describe deployments.apps sentence-age 
- 2022  helm upgrade myapp sentence-app/
- 2023  kubectl describe deployments.apps sentence-age 
- 2024  kubectl apply -f sentence-app/templates/sentences-age-deployment.yaml 
- 2025  helm upgrade myapp sentence-app/
- 2026  kubectl describe deployments.apps sentence-age 
- 2027  helm upgrade myapp sentence-app/
- 2028  kubectl describe deployments.apps sentence-age 
+### Step by step instructions
 
+<details>
+<summary>Detailed instructions</summary>
+
+- Make sure that you have a release running in your cluster: `helm upgrade --install myapp sentence-app/`
+- See that the pods are deployed: `kubectl get pods`
+- Note down the revision number: `helm ls`
+- Add a label to the deployment located in `release-rollback/extra/sentences-age-deployment.yaml`
+- Apply the hand-edited deployment `kubectl apply -f sentence-app/templates/sentences-age-deployment.yaml`
+- See that the revision is still the same `helm ls`
+- See the added label in the cluster `kubectl describe deployments.apps sentence-age `
+- Make an upgrade back to the original version  `helm upgrade myapp sentence-app/`
+- See that the new label is still persisted. `kubectl describe deployments.apps sentence-age`
+- Edit one of the existing labels in `release-rollback/extra/sentences-age-deployment.yaml`
+- Apply the hand-edited deployment `kubectl apply -f sentence-app/templates/sentences-age-deployment.yaml`
+- See that the label has changed value in the cluster `kubectl describe deployments.apps sentence-age`
+- Apply our original release `helm upgrade myapp sentence-app/`
+- See that the label value have been reverted to the original value:`kubectl describe deployments.apps sentence-age`
+
+
+</details>
 
 ### Clean up
 
