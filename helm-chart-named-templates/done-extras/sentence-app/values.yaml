@@ -11,7 +11,7 @@ sentences:
       memory: "500Mi"
   service:
     type: ClusterIP
-    nodePort: 31234
+    # nodePort: 31234
 
 sentencesAge:
   resources:

@@ -168,7 +168,12 @@ This argument is only relevant when using the `NodePort` service type, so let's 
 
 > :bulb: Note the difference in case for `NodePort` and `nodePort`.
 
-- Add the port to your `values.yaml`:
+- Choose a random number between 30000 and 32767 and add it as the `nodePort` in your `values.yaml`:
+
+> :bulb: the range `30000-32767` is the default range for NodePorts in Kubernetes.
+> Only one service can occupy a specific port at a time, therefore if you are multiple people doing the exercises together, then everyone must choose a unique port, so as not to conflict.
+> [You click here if you need inspiration for your unique port number](https://www.randomlists.com/random-numbers?dup=false&qty=1&max=32767&min=30000)
+> In the example we will use `31234`, but you should choose a different one.
 
 ```yaml
 sentences:
