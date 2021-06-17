@@ -1,5 +1,4 @@
-# Template headline
-
+# Helm Lint and Kubeval
 ## Learning Goals
 
 - Debug helm chart through `helm lint`
