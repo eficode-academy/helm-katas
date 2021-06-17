@@ -221,7 +221,14 @@ installation.
 
 Try to reach it again like we did with the raw kubernetes objects application to begin with.
 
-- Note down the NodePort from the service `kubernetes get svc`
+- Note down the NodePort from the service `kubectl get svc`
+
+Look up an external accessible IP address that can be used to access the front-end microservice.
+
+- `kubectl get nodes -o wide`
+
+Any of the IP addresses from the `EXTERNAL-IP`-column can be used.
+
 - `curl <EXTERNAL-IP>:<NodePort>` and see that your application is running once again.
 
 Output:
