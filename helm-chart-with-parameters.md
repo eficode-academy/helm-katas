@@ -146,7 +146,9 @@ This key is currently not in the deployment specification, so we have to add it.
 
 - add `replicas: {{ .Values.sentences.replicas }}` to the yaml:
 
-> :bulb: The replicas key is not there by default, so you must add it to the outermost `spec` map.
+> :bulb: Be careful here, a Deployment object has two `spec` keys, one for the Deployment itself, and one for the `pod spec`.
+> You must add the `replicas` key to the `Deployment spec`, that is the outermost `spec` key.
+> The outermost spec key should be on line 8, so you can add the replicas key on a new line below.
 
 ```yaml
 apiVersion: apps/v1
