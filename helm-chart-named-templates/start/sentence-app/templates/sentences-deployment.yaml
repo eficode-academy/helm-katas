@@ -30,4 +30,5 @@ spec:
           '--age-service', 'http://age:8080',
           '--name-service', 'http://name:8080'
 	]
-        {{- include "resources" .Values.sentences | nindent 8 }}
+        resources:
+          {{- .Values.sentences.resources | toYaml | nindent 10 }}
