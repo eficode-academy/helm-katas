@@ -1,0 +1,9 @@
+The NOTES.txt can also contain templating.
+
+------------------------------------------
+
+
+< Add example to be rendered here >
+
+
+------------------------------------------

@@ -1,10 +1,7 @@
-## Since this produces invalid yaml you must render with the --debug flag
+myYaml:
+  k8s: {{ "is-awesome" -}}
+  myValue: foo
+  myOtherValue:
 
-## we comment the file out so that the rest of the templates render correctly
-## to use simply remove the '#'
 
-# myYaml:
-  # k8s: {{ "is-awesome" -}}
-  # myValue: foo
-  # myOtherValue:
-        # {{- .Values.myOtherValue }}
+        {{- .Values.myOtherValue }}

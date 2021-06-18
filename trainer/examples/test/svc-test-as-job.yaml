@@ -1,0 +1,20 @@
+## Example of the sentence-svc-test as a Job instead of Pod.
+##
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: "{{ .Release.Name }}-sentence-svc-test"
+  annotations:
+    # this annotation is what makes this pod spec a helm test!
+    "helm.sh/hook": test
+spec:
+  template:
+    metadata:
+      name: "{{ .Release.Name }}-sentence-svc-test"
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: "{{ .Release.Name }}-sentence-svc-test"
+          image: praqma/network-multitool:minimal
+          command: ["curl", "-s", "{{ .Values.sentences.service.name }}:{{ .Values.sentences.service.port }}"]

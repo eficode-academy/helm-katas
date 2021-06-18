@@ -1,0 +1,9 @@
+{{- $containsBar := false }}
+{{- range .Values.mySlice }}
+{{- if contains "bar" . }}
+{{- $containsBar = true }}
+{{- end }}
+{{- end }}
+
+myYaml:
+  containsBar: {{ $containsBar }}
