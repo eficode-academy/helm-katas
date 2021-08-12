@@ -199,14 +199,14 @@ With a strategic merge, a list is either replaced or merged depending on its pat
 - Make sure that you have a release running in your cluster: `helm upgrade --install myapp sentence-app/`
 - See that the pods are deployed: `kubectl get pods`
 - Note down the revision number: `helm ls`
-- Add a label to the deployment located in `release-rollback/extra/sentences-age-deployment.yaml`
-- Apply the hand-edited deployment `kubectl apply -f sentence-app/extra/sentences-age-deployment.yaml`
+- Add a label to the deployment located in `extra/sentences-age-deployment.yaml`
+- Apply the hand-edited deployment `kubectl apply -f extra/sentences-age-deployment.yaml`
 - See that the revision is still the same `helm ls`
 - See the added label in the cluster `kubectl describe deployments.apps sentence-age `
 - Make an upgrade back to the original version  `helm upgrade myapp sentence-app/`
 - See that the new label is still persisted. `kubectl describe deployments.apps sentence-age`
-- Edit one of the existing labels in `release-rollback/extra/sentences-age-deployment.yaml`
-- Apply the hand-edited deployment `kubectl apply -f sentence-app/extra/sentences-age-deployment.yaml`
+- Edit one of the existing labels in `extra/sentences-age-deployment.yaml`
+- Apply the hand-edited deployment `kubectl apply -f extra/sentences-age-deployment.yaml`
 - See that the label has changed value in the cluster `kubectl describe deployments.apps sentence-age`
 - Apply our original release `helm upgrade myapp sentence-app/`
 - See that the label value have been reverted to the original value:`kubectl describe deployments.apps sentence-age`
