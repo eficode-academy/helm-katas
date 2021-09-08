@@ -271,7 +271,7 @@ REVISION: 2
 
 - Verify that all resources are correctly deployed with `kubectl get pods`.
 
-> It is important that all pods are in the `READY` state, since otherwise we might get a false negative when we run the test.
+> It is important that all pods have the status `Running`, since otherwise we might get a false negative when we run the test.
 
 - Execute the test: `$ helm test sentences`
 
