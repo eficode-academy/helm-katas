@@ -430,7 +430,7 @@ spec:
       containers:
       - ...
         resources:
-{{ toYaml .Values.sentences.resources | indent 10}}
+{{ toYaml .Values.sentences.resources | indent 10 }}
 ```
 
 > :bulb: Notice that we remove all indentation in front of our action, as the `indent` function will handle creating all of the required whitespace.
