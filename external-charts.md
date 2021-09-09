@@ -145,7 +145,7 @@ Before we add the bitnami chart as a dependency, let's remove the existing custo
 
 - Delete the files:
     - `rm todo/templates/mysql-deployment.yaml`
-    - `rm todo/templates/mysql-svc.yaml`
+    - `rm todo/templates/mysql-service.yaml`
 
 **Declare the bitnami/mysql chart as a dependency**
 
