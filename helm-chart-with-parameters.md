@@ -328,7 +328,7 @@ We will make the same changes that you made to `sentence-app/templates/sentences
 
 We need to do one thing differently though, and that is that we need to specify which of the deployment the value belongs to, so that we can differentiate between them.
 
-In the previous steps we referenced the values of the `sentences` value map, now we will be creating two new maps, `sentecesAge` and `sentencesName`.
+In the previous steps we referenced the values of the `sentences` value map, now we will be creating two new maps, `sentencesAge` and `sentencesName`.
 
 You must use the appropriate map when making your changes to the deployment template files.
 
