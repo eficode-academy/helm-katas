@@ -35,7 +35,6 @@ As well as two services to handle networking, a `ClusterIP` for the mysql databa
 
 We will start by deploying the example todo application with all custom Kubernetes yaml, and then modify the chart to use the `bitnami/mysql` chart as a dependency, instead of our custom mysql deployment.
 
-You should start with the example chart located in `helm-katas/external-charts/start`.
 If you get stuck, or you want to see how the finished chart looks, a completed version can be found in `helm-katas/external-charts/done`.
 
 ### Overview
@@ -57,11 +56,12 @@ If you get stuck, or you want to see how the finished chart looks, a completed v
 
 **Deploy the initial version of the todo application**
 
-Let's start by deploying the basic version of the todo application chart.
+- Let's start by navigating to the exercise `cd helm-katas/external-charts/start`
+
+- Thereafter deploying the basic version of the todo application chart.
 
 - Deploy the application:
 ```sh
-$ cd helm-katas/external-charts/start
 $ helm install my-todo todo
 NAME: my-todo
 LAST DEPLOYED: Sun May 30 16:03:34 2021
@@ -75,7 +75,15 @@ TEST SUITE: None
 
 - Access the service from your browser using the node port.
 
-Play around with the application for a moment, add some items, delete some items, and refresh the page to verify that the state of the todo application is persisted to the mysql database.
+<details>
+<summary>:bulb: how do I get the nodeport?</summary>
+
+You need the external IP of the one of the cluster nodes.
+You can get that by issuing `kubectl get nodes -o wide`
+
+</details>
+
+- Play around with the application for a moment, add some items, delete some items, and refresh the page to verify that the state of the todo application is persisted to the mysql database.
 
 Once you are confident that the application works, we then proceed to using a chart dependency instead of our custom deployment to install the mysql database.
 
@@ -136,14 +144,14 @@ In this case we do not want to customize any of the templates of the mysql chart
 Before we add the bitnami chart as a dependency, let's remove the existing custom templates for mysql:
 
 - Delete the files:
-    - `helm-katas/external-charts/start/todo/templates/mysql-deployment.yaml`
-    - `helm-katas/external-charts/start/todo/templates/mysql-svc.yaml`
+    - `rm todo/templates/mysql-deployment.yaml`
+    - `rm todo/templates/mysql-svc.yaml`
 
 **Declare the bitnami/mysql chart as a dependency**
 
-We can declare external charts as depenencies for our own chart by adding an entry to the `dependencies` map in our `Chart.yaml`.
+We can declare external charts as dependencies for our own chart by adding an entry to the `dependencies` map in our `Chart.yaml`.
 
-- Open your `Chart.yaml` - `helm-katas/external-charts/start/todo/Chart.yaml` and add the following:
+- Open your `Chart.yaml` - `todo/Chart.yaml` and add the following:
 
 ```yaml
 ...
@@ -191,7 +199,7 @@ Luckily the `bitnami/mysql` chart has values we can set for these.
 
 We do this by adding the values to our own `values.yaml` and place them under a top key that has the same name as the chart, in this case `mysql`.
 
-- Edit your `helm-katas/external-charts/start/todo/values.yaml` and change:
+- Edit your `todo/values.yaml` and change:
 
 ```yaml
 ...
