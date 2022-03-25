@@ -514,3 +514,7 @@ spec:
 ```
 
 </details>
+
+### Clean up
+
+- `helm uninstall sentences`
