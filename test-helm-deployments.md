@@ -85,7 +85,7 @@ spec:
   restartPolicy: Never
   containers:
     - name: "{{ .Release.Name }}-sentence-svc-test"
-      image: praqma/network-multitool:minimal
+      image: ghcr.io/eficode-academy/network-multitool:latest
       command: ["curl", "-s", "sentence:8080"]
 ```
 
@@ -239,7 +239,7 @@ spec:
   restartPolicy: Never
   containers:
     - name: "{{ .Release.Name }}-sentence-svc-test"
-      image: praqma/network-multitool:minimal
+      image: ghcr.io/eficode-academy/network-multitool:latest
       command: ["curl", "-s", "sentence:8080"]
 ```
 

@@ -200,7 +200,7 @@ With a strategic merge, a list is either replaced or merged depending on its pat
 - See that the pods are deployed: `kubectl get pods`
 - Note down the revision number: `helm ls`
 - Add a label to the deployment located in `extra/sentences-age-deployment.yaml`
-- Apply the hand-edited deployment `kubectl apply -f extra/sentences-age-deployment.yaml`
+- Apply the hand-edited deployment (its safe to ignore the warning about a missing annotation) `kubectl apply -f extra/sentences-age-deployment.yaml`
 - See that the revision is still the same `helm ls`
 - See the added label in the cluster `kubectl describe deployments.apps sentence-age `
 - Make an upgrade back to the original version  `helm upgrade myapp sentence-app/`

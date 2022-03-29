@@ -305,7 +305,7 @@ Play around with the application again, and verify that the application is worki
 - `helm uninstall my-todo`
 - `kubectl delete pvc data-my-todo-mysql-0` (your pvc name might be different)
 
-#### Resources
+### Resources
 
 https://helm.sh/docs/chart_best_practices/dependencies/#versions
 https://helm.sh/docs/helm/helm_pull/

@@ -6,7 +6,7 @@ A set of Helm exercises actively used by [Eficode Academy](https://www.eficode.c
 
 Natural progression:
 
-- [Intro to helm package manager](intro-to-helm-package-manager.md)
+- [Intro to Kubernetes package manager](intro-to-kubernetes-package-manager.md)
 - [Hello sentences app](hello-sentences-app.md)
 - [Create a helm chart](create-a-helm-chart.md)
 - [Helm release and rollback](release-rollback.md)

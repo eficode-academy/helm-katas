@@ -120,16 +120,10 @@ To access NGINX from outside the cluster, follow the steps below:
 
 **Access the Nginx load balanced service**
 
-Get the external IP and port with the following
-three commands.
-> :bulb: You must change `user1` in the below commands to your namespace.
-> You can find your namespace with the command `kubectl config view | grep namespace`.
+Get the external IP/DNS of Nginx with the following commands:
 
-- `export SERVICE_PORT=$(kubectl get --namespace user1 -o jsonpath="{.spec.ports[0].port}" services my-release-nginx)`
-- `export SERVICE_IP=$(kubectl get svc --namespace user1 my-release-nginx -o jsonpath='{.status.loadBalancer.ingress[0].ip}')`
-- `echo "http://${SERVICE_IP}:${SERVICE_PORT}"`
-- Navigate your browser to the url printed out by
-  the last command
+- `kubectl get services`
+- Navigate your browser to the IP/DNS found in the `EXTERNAL-IP` column
 
 **Look at the status of the deployment with `helm`
 and `kubectl`**
