@@ -90,7 +90,7 @@ This command creates a release called `my-release`
 with the bitnami/nginx chart.
 
 The command will output information about your
-newly deployed mysql setup similar to this:
+newly deployed nginx setup similar to this:
 
 ```
 NAME: my-release
