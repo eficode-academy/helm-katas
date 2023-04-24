@@ -158,7 +158,7 @@ We can declare external charts as dependencies for our own chart by adding an en
 dependencies:
   - repository: https://charts.bitnami.com/bitnami
     name: mysql
-    version: 8.5.10
+    version: 9.7.2
 ```
 
 > :bulb: the `dependencies` key takes a list of chart dependencies.
@@ -170,7 +170,7 @@ Which declares that our todo chart is dependent upon the bitnami chart `mysql` o
 
 Now that we have declared the bitnami mysql chart as a dependency, we can pull the chart down so that we can install it as part of our release:
 
-- Use the `helm dependency update` command to install the `bitnami/mysql` chart locally.
+- Use the `helm dependency update todo` command to install the `bitnami/mysql` chart locally.
 
 ```sh
 $ helm dependency update todo
@@ -186,7 +186,7 @@ This will place the `bitnami/mysql` chart as tar file in the in the `charts/` di
 
 ```sh
 $ ls todo/charts
-mysql-8.5.10.tgz
+mysql-9.7.2.tgz
 ```
 
 **Configure the mysql chart**
@@ -218,8 +218,6 @@ To:
 ```yaml
 ...
 mysql:
-  image:
-    tag: 5.7
   auth:
     rootPassword: todos
     database: todos
@@ -235,10 +233,7 @@ mysql:
         memory: "1000Mi"
 ```
 
-First we customize the container image tag to use, with the `mysql.image.tag` key.
-We know that our todo application uses mysql version `5.7`, so we choose the container image tag with the appropriate version.
-
-Next, by defining the `mysql.auth` values, we can have the chart automatically setup a database with the provided name, and create a user with the specified username and password.
+First, by defining the `mysql.auth` values, we can have the chart automatically setup a database with the provided name, and create a user with the specified username and password.
 
 Finally we set some resource requests and limits.
 

@@ -77,14 +77,20 @@ command.
 To install the Bitnami Helm Repo and update Helm's
 local list of Charts, run:
 
-- `helm repo add bitnami https://charts.bitnami.com/bitnami`
-- `helm repo update`
+```shell
+helm repo add bitnami https://charts.bitnami.com/bitnami
+```
+```shell
+helm repo update
+```
 
 **Install Nginx Chart**
 
 We use the Nginx chart because it is fast and easy to install, and allows us to access the Nginx webserver from our browser to verify that it was deployed.
 
-- `helm install my-release bitnami/nginx`
+```shell
+helm install my-release bitnami/nginx
+```
 
 This command creates a release called `my-release`
 with the bitnami/nginx chart.
@@ -92,7 +98,7 @@ with the bitnami/nginx chart.
 The command will output information about your
 newly deployed nginx setup similar to this:
 
-```
+```shell
 NAME: my-release
 LAST DEPLOYED: Tue Apr 20 12:46:10 2021
 NAMESPACE: user1
@@ -122,7 +128,10 @@ To access NGINX from outside the cluster, follow the steps below:
 
 Get the external IP/DNS of Nginx with the following commands:
 
-- `kubectl get services`
+```shell 
+kubectl get services
+```
+
 - Navigate your browser to the IP/DNS found in the `EXTERNAL-IP` column
 
 **Look at the status of the deployment with `helm`
@@ -155,6 +164,8 @@ deployments.
 
 To remove the `my-release` release run:
 
-- `helm uninstall my-release`
+```shell
+helm uninstall my-release
+```
 
 </details>

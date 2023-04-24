@@ -164,7 +164,9 @@ Running this command produces the following output:
 To deploy the chart from the newly created chart
 run the following:
 
-- `helm install sentences sentence-app/`
+```bash
+helm install sentences sentence-app/
+```
 
 Running this command produces the following output:
 
@@ -181,7 +183,12 @@ To see all the different objects that Helm has
 created, use:
 
 ```shell
-$ kubectl get pods,services,deployments
+kubectl get pods,services,deployments
+```
+
+Expected output:
+
+```shell
 NAME                                READY   STATUS    RESTARTS   AGE
 pod/sentence-age-78fc854dd5-w9gdq   1/1     Running   0          64s
 pod/sentence-name-ff4c584b9-txp5n   1/1     Running   0          64s
@@ -201,7 +208,11 @@ deployment.apps/sentences       1/1     1            1           66s
 To see the applications installed with Helm use
 the `helm ls` operation:
 
-- `helm ls`
+```shell
+helm ls
+```
+
+expected output:
 
 ```shell
 NAME            NAMESPACE       REVISION        UPDATED                                 STATUS         CHART                    APP VERSION
@@ -212,7 +223,9 @@ To see the Kubernetes YAML which Helm used to
 install the application use the `helm get`
 operation:
 
-- `helm get all sentences`
+```shell
+helm get all sentences
+```
 
 In our case this will be identical to the YAML
 files we copied previously since we haven't
@@ -251,5 +264,5 @@ to have a Helm chart for each microservice?
 Uninstall the application release with Helm:
 
 ```shell
-$ helm uninstall sentences
+helm uninstall sentences
 ```
