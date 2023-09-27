@@ -89,7 +89,7 @@ helm repo update
 We use the Nginx chart because it is fast and easy to install, and allows us to access the Nginx webserver from our browser to verify that it was deployed.
 
 ```shell
-helm install my-release bitnami/nginx
+helm install my-release bitnami/nginx --set service.type=NodePort
 ```
 
 This command creates a release called `my-release`
@@ -100,39 +100,55 @@ newly deployed nginx setup similar to this:
 
 ```shell
 NAME: my-release
-LAST DEPLOYED: Tue Apr 20 12:46:10 2021
-NAMESPACE: user1
+LAST DEPLOYED: Wed Sep 27 09:21:48 2023
+NAMESPACE: student-3
 STATUS: deployed
 REVISION: 1
 TEST SUITE: None
 NOTES:
-** Please be patient while the chart is being deployed **
+CHART NAME: nginx
+CHART VERSION: 15.3.1
+APP VERSION: 1.25.2
 
+** Please be patient while the chart is being deployed **
 NGINX can be accessed through the following DNS name from within your cluster:
 
-    my-release-nginx.user1.svc.cluster.local (port 80)
+    my-release-nginx.student-3.svc.cluster.local (port 80)
 
 To access NGINX from outside the cluster, follow the steps below:
 
 1. Get the NGINX URL by running these commands:
 
-  NOTE: It may take a few minutes for the LoadBalancer IP to be available.
-        Watch the status with: 'kubectl get svc --namespace user1 -w my-release-nginx'
+    export NODE_PORT=$(kubectl get --namespace student-3 -o jsonpath="{.spec.ports[0].nodePort}" services my-release-nginx)
+    export NODE_IP=$(kubectl get nodes --namespace student-3 -o jsonpath="{.items[0].status.addresses[0].address}")
+    echo "http://${NODE_IP}:${NODE_PORT}"
 
-    export SERVICE_PORT=$(kubectl get --namespace user1 -o jsonpath="{.spec.ports[0].port}" services my-release-nginx)
-    export SERVICE_IP=$(kubectl get svc --namespace user1 my-release-nginx -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
-    echo "http://${SERVICE_IP}:${SERVICE_PORT}"
 ```
 
-**Access the Nginx load balanced service**
+**Access the Nginx NodePort service**
 
-Get the external IP/DNS of Nginx with the following commands:
+Get the external port of Nginx with the following commands:
 
 ```shell 
 kubectl get services
 ```
+- Note down the external port of the Nginx service, it should be in the range of 30000-32767
 
-- Navigate your browser to the IP/DNS found in the `EXTERNAL-IP` column
+- Note down one of the external IP addresses of the nodes in the cluster
+
+```shell
+kubectl get nodes -o wide
+```
+
+result:
+  
+  ```shell
+  NAME                                            STATUS   ROLES    AGE     VERSION   INTERNAL-IP      EXTERNAL-IP     OS-IMAGE             KERNEL-VERSION    CONTAINER-RUNTIME
+ip-192-168-83-125.eu-north-1.compute.internal   Ready    <none>   4h29m   v1.26.8   192.168.83.125   13.51.165.230   Ubuntu 20.04.6 LTS   5.15.0-1045-aws   cri-o://1.26.1
+ip-192-168-85-161.eu-north-1.compute.internal   Ready    <none>   4h29m   v1.26.8   192.168.85.161   13.53.106.222   Ubuntu 20.04.6 LTS   5.15.0-1045-aws   cri-o://1.26.1
+```
+
+- Open a browser and enter the IP address and port of the Nginx service, e.g. `http://<node-ip>:<node-port>`
 
 **Look at the status of the deployment with `helm`
 and `kubectl`**
