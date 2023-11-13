@@ -1,17 +1,17 @@
-# Helm Lint and Kubeval
+# Helm Lint and kubeconform
 ## Learning Goals
 
 - Debug helm chart through `helm lint`
-- Debug kubernetes objects renderes through helm with the `helm kubeval` plugin
+- Debug kubernetes objects renderes through helm with the `helm kubeconform` plugin
 
-## Helm linting and Kubeval plugin
+## Helm linting and kubeconform plugin
 
-Linting and evaluating the kubernetes objects that helm produces through `helm lint` and `kubeval` can help you speed up you development of helm charts, by catching your typos and indentation mistakes.
+Linting and evaluating the kubernetes objects that helm produces through `helm lint` and `kubeconform` can help you speed up you development of helm charts, by catching your typos and indentation mistakes.
 
 We are going to use two different tools here:
 
 - `helm lint` will lint your helm chart, catching mandatory fields not set in the helm objects, and validate all of the YAML containing actions.
-- `helm kubeval` is a plugin to render your chart into kubernetes objects, and then run the `kubeval` kubernetes YAML linter on them. It functions similarly to `helm lint`, but for kubernetes objects.
+- `helm kubeconform` is a plugin to render your chart into kubernetes objects, and then run the `kubeconform` kubernetes YAML linter on them. It functions similarly to `helm lint`, but for kubernetes objects.
 
 Both tools help you, but with different scope, one for the template files themselves, and the other for the rendered templates.
 
@@ -27,7 +27,7 @@ But we will provide a section with hints in :bulb:.
 The exercise resides in the `helm-lint/start` folder.
 
 - Run `helm lint sentence-app/` to help you identify the problems of the chart.
-- Run `helm kubeval sentence-app/` to help you investigate further.
+- Run `helm kubeconform sentence-app/` to help you investigate further.
 - Deploy the fixed chart
 
 ### Hints
@@ -49,7 +49,7 @@ The exercise resides in the `helm-lint/start` folder.
 <details>
 <summary> :bulb: Third hint</summary>
 
-> By now, helm lint should not give you any more errors, and you need to use helm kubeval. The error it gives you are aimed at the kubernetes objects. Therefore the typo in "port" should be fairly easy to spot in `sentence-app/templates/sentences-age-svc.yaml`
+> By now, helm lint should not give you any more errors, and you need to use helm kubeconform. The error it gives you are aimed at the kubernetes objects. Therefore the typo in "port" should be fairly easy to spot in `sentence-app/templates/sentences-age-svc.yaml`
 
 </details>
 
@@ -59,4 +59,4 @@ If anything needs cleaning up, here is the section to do just that.
 
 ### Resources
 
-https://artifacthub.io/packages/helm-plugin/kubeval/kubeval
+https://github.com/melmorabity/helm-kubeconform
