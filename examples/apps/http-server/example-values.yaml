@@ -1,0 +1,17 @@
+
+app: my-website
+replicas: 2
+containerPort: 80
+image:
+  repository: nginx
+  tag: 1.19.0
+defaultIngressHostSuffix: eficode.academy
+prefix: training
+#customHost: hello.world.eficode.academy
+resources:
+  requests:
+    cpu: 0.25
+    memory: "100Mi"
+  limits:
+    cpu: 0.50
+    memory: "500Mi"

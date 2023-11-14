@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.app }}
+  labels:
+{{ include "metadata" . | indent 4 }}
+spec:
+  replicas: {{ .Values.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.app }}
+  template:
+    metadata:
+      labels:
+    {{- include "metadata" . | nindent 8 }}
+    spec:
+      containers:
+      - name: {{ .Values.app }}
+        image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+        ports:
+          - containerPort: {{ .Values.containerPort }}
+            name: http-web
+            protocol: TCP
+        resources:
+          {{- include "resources" . | indent 10 }}
+{{- if .Values.env }}
+        env:
+{{- toYaml .Values.env | nindent 10 }}
+{{- end }}
+       

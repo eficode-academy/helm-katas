@@ -1,0 +1,10 @@
+
+app: the-website
+replicas: 2
+containerPort: 80
+image:
+  repository: nginx
+  tag: 1.25
+defaultIngressHostSuffix: eficode.academy
+prefix: test
+#customHost: hello.world.eficode.academy

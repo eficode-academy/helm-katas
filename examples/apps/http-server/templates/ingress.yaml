@@ -1,0 +1,38 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ .Values.app }}
+  labels:
+    app: {{ .Values.app }}
+    managed_by: {{ .Release.Service }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+  annotations:
+      # These annotations are required to use ALB Ingress Controller
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    kubernetes.io/ingress.class: alb
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":443}]'
+spec:
+  rules:
+  # Example: https://app.k8s.acme.com
+  - host: {{ .Release.Namespace }}-{{ .Values.app }}.{{.Values.prefix}}.{{ .Values.defaultIngressHostSuffix }}
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: {{ .Values.app }} #Same as the serivce name
+            port:
+              number: 80
+  {{- if $.Values.customHost }}
+  - host: {{ .Values.customHost }}
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: {{ .Values.app }}
+            port:
+              name: server
+  {{- end }}

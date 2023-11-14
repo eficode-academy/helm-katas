@@ -1,0 +1,5 @@
+apiVersion: v2
+name: http-server
+description: A template for a basic http server
+type: application
+version: 1.0.0
