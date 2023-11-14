@@ -6,7 +6,7 @@ todoApp:
   mysqlPassword: todos
   service:
     name: todo-app
-    type: LoadBalancer
+    type: NodePort
 
 mysql:
   image:
