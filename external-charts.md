@@ -303,4 +303,5 @@ Play around with the application again, and verify that the application is worki
 ### Resources
 
 https://helm.sh/docs/chart_best_practices/dependencies/#versions
+https://levelup.gitconnected.com/helm-dependencies-1907facbe410
 https://helm.sh/docs/helm/helm_pull/
