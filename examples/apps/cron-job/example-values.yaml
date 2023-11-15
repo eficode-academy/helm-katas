@@ -1,0 +1,14 @@
+
+app: my-cronjob
+image:
+  repository: nginx
+  tag: 1.19.0
+schedule: "*/1 * * * *"
+#customHost: hello.world.eficode.academy
+resources:
+  requests:
+    cpu: 0.25
+    memory: "100Mi"
+  limits:
+    cpu: 0.50
+    memory: "500Mi"

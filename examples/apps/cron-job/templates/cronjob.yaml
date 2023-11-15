@@ -1,0 +1,20 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ .Values.app }}
+  labels:
+    {{- include "metadata" . | nindent 4 }}
+spec:
+  schedule: {{ .Values.schedule | quote }}
+  concurrencyPolicy: Forbid # Don't start another job if the previous is still running
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: {{ .Values.app }}
+            image:  {{ .Values.image.repository }}:{{ .Values.image.tag }}
+            imagePullPolicy: IfNotPresent
+            resources:
+            {{- include "resources" .Values.sentencesName | nindent 12 }}
+          restartPolicy: OnFailure
