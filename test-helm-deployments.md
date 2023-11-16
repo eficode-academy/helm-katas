@@ -401,7 +401,7 @@ The test should succeed.
 
 - Clean up the test pod after the test has run with `kubectl delete pod sentences-sentence-svc-test`.
 
-**Add a new test which uses regex to check that the returned body of the sentence service is correct**
+## Extra: Add a new test which uses regex to check that the returned body of the sentence service is correct
 
 Helm test pod specs can contain any container executing arbitrary commands.
 
