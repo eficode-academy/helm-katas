@@ -118,7 +118,7 @@ The `helm create` command we just issued created a lot of files that you might w
 We do not need all of those files for the chart we will be creating, therefore we will remove the files we do not need:
 
 - `rm -rf sentence-app/templates/*`
-- `touch sentence-app/values.yaml`
+- `echo "" > sentence-app/values.yaml`
 
 This provides us with skeleton chart without any
 template files.

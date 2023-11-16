@@ -158,7 +158,7 @@ We can declare external charts as dependencies for our own chart by adding an en
 dependencies:
   - repository: https://charts.bitnami.com/bitnami
     name: mysql
-    version: 9.7.2
+    version: 9.14.3
 ```
 
 > :bulb: the `dependencies` key takes a list of chart dependencies.
