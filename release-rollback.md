@@ -99,7 +99,7 @@ The reason is that none of our two upgrade commands took the values.yaml file as
 
 </details>
 
-> :bulb: If do not have the `diff` plugin installed you can install it with: `$ helm plugin install https://github.com/databus23/helm-diff`
+> :bulb: If you do not have the `diff` plugin installed you can install it with: `$ helm plugin install https://github.com/databus23/helm-diff`
 
 - Run `helm diff upgrade myapp sentence-app -f values.yaml` to see what changes the values in `values.yaml` would have to our release.
 - Apply the values, run: `helm upgrade --install myapp sentence-app/ -f values.yaml` to create a new release with the values applied as well.

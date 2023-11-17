@@ -1,4 +1,4 @@
-# Helm Chart with Parameters and Handling Whitespace
+# Helm Chart with Parameters
 
 ## Learning Goals
 
