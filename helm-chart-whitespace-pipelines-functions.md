@@ -153,8 +153,8 @@ In this exercise we will use functions, pipelines and whitespace handling to par
 - Make the resources pipeline more readable by managing whitespace
 
 You can use your Helm chart from the previous exercise as the starting point for this exercise.
-Alternatively there is a Helm chart that picks up from the last exercise in `helm-katas/helm-chart-whitespace-functions-pipelines/start` that you can use.
-If you get stuck, or you want to see how the final chart looks, there is a solved version of the chart in `helm-katas/helm-chart-whitespace-functions-pipelines/done`.
+Alternatively there is a Helm chart that picks up from the last exercise in `helm-katas/helm-chart-whitespace-pipelines-functions/start` that you can use.
+If you get stuck, or you want to see how the final chart looks, there is a solved version of the chart in `helm-katas/helm-chart-whitespace-pipelines-functions/done`.
 
 ### Step-by-Step
 
