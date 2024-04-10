@@ -89,7 +89,7 @@ helm repo update
 We use the Nginx chart because it is fast and easy to install, and allows us to access the Nginx webserver from our browser to verify that it was deployed.
 
 ```shell
-helm install my-release bitnami/nginx --set service.type=NodePort
+helm install my-release bitnami/nginx --version=15.0.0 --set service.type=NodePort
 ```
 
 This command creates a release called `my-release`
