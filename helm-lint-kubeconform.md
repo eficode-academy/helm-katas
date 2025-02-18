@@ -55,7 +55,7 @@ The exercise resides in the `helm-lint/start` folder.
 
 ### Clean up
 
-If anything needs cleaning up, here is the section to do just that.
+If anything needs cleaning up, here is the section to do just that. If you have deployed the chart, please uninstall it again :)
 
 ### Resources
 
