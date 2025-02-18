@@ -14,7 +14,7 @@ Natural progression:
 - [Helm Chart Whitespace Handling, Pipelines and Functions](helm-chart-whitespace-pipelines-functions.md)
 - [Helm Chart Conditionals](helm-chart-conditionals.md)
 - [Helm Chart Named Templates](helm-chart-named-templates.md)
-- [Helm lint and kubeval](helm-lint-kubeval.md)
+- [Helm lint and kubeval](helm-lint-kubeconform.md)
 - [Testing Helm Deployments](test-helm-deployments.md)
 - [Sharing charts](sharing-charts.md)
 - [External charts](external-charts.md)
