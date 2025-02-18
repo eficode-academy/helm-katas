@@ -217,6 +217,8 @@ To:
 
 ```yaml
 ...
+global:
+  storageClass: gp3
 mysql:
   auth:
     rootPassword: todos
