@@ -112,13 +112,13 @@ First we create a new directory for our Helm chart, and then use the `helm creat
 
 - `mkdir helm-chart`
 - `cd helm-chart`
-- `helm create sentence-app`
+- `helm create sentences-app`
 
 The `helm create` command we just issued created a lot of files that you might want to use when creating a new Helm chart.
 We do not need all of those files for the chart we will be creating, therefore we will remove the files we do not need:
 
-- `rm -rf sentence-app/templates/*`
-- `echo "" > sentence-app/values.yaml`
+- `rm -rf sentences-app/templates/*`
+- `echo "" > sentences-app/values.yaml`
 
 This provides us with skeleton chart without any
 template files.
@@ -129,7 +129,7 @@ chart**
 Next, we copy the original Kubernetes YAML files
 to the template folder:
 
-- `cp -v ../sentences-app/deploy/kubernetes/*.yaml sentence-app/templates/`
+- `cp -v ../sentences-app/deploy/kubernetes/*.yaml sentences-app/templates/`
 
 That's it - now we have a Helm chart for our
 sentences application.
@@ -145,12 +145,12 @@ sentences application.
 Before deploying the chart, we run a static
 validation of it:
 
-- `helm lint sentence-app/`
+- `helm lint sentences-app/`
 
 Running this command produces the following output:
 
 ```shell
-==> Linting sentence-app/
+==> Linting sentences-app/
 [INFO] Chart.yaml: icon is recommended
 
 1 chart(s) linted, 0 chart(s) failed
@@ -165,7 +165,7 @@ To deploy the chart from the newly created chart
 run the following:
 
 ```bash
-helm install sentences sentence-app/
+helm install sentences sentences-app/
 ```
 
 Running this command produces the following output:
@@ -216,7 +216,7 @@ expected output:
 
 ```shell
 NAME            NAMESPACE       REVISION        UPDATED                                 STATUS         CHART                    APP VERSION
-sentences       user1           1               2021-04-21 10:43:55.789048706 +0000 UTC deployed       sentence-app-0.1.0       1.16.0
+sentences       user1           1               2021-04-21 10:43:55.789048706 +0000 UTC deployed       sentences-app-0.1.0       1.16.0
 ```
 
 To see the Kubernetes YAML which Helm used to
