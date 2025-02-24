@@ -307,3 +307,7 @@ Play around with the application again, and verify that the application is worki
 https://helm.sh/docs/chart_best_practices/dependencies/#versions
 https://levelup.gitconnected.com/helm-dependencies-1907facbe410
 https://helm.sh/docs/helm/helm_pull/
+
+### Bonus: Visualize Your Helm Charts
+
+For an enhanced experience when sharing and reviewing your Helm charts, consider using the [Helm Kanvas Snapshot](https://meshery.io/extensions/helm-kanvas-snapshot) plugin. This tool generates visual snapshots of your Helm charts directly from the command line, making it easier to understand complex chart configurations and communicate changes with your team.
